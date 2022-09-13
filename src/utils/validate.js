@@ -109,8 +109,9 @@ const rules = {
 	},
 
 	allowedImgExt: /(\.png|\.jpg|\.jiff|\.webp|\.bmp|\.jpeg|\.avif)$/i,
+	allowedAudioExt: /(\.mp3|\.flac|\.wav|\.ogg)$/i,
 
-	isImage: (formCtrl, allowedExtensions) => {
+	isValidFile: (formCtrl, allowedExtensions) => {
 		const filePath = formCtrl.value;
 		allowedExtensions.test(filePath) ? showSuccess(formCtrl, null) : showError(formCtrl, "File's extension is not allowed");
 		// Allowing file type
