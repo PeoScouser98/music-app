@@ -1,8 +1,8 @@
 import loadingScreen from "../components/loading-screen";
-import { $ } from "../utils/dom-query";
+import { $ } from "../utils/common";
 import { register } from "../api/auth";
 import rules from "../utils/validate";
-import createToast from "../components/toast";
+import toast from "../components/toast";
 
 const registerPage = {
 	render() {
@@ -78,19 +78,17 @@ const registerPage = {
 				console.log(user);
 				try {
 					loadingScreen.showLoading();
-
 					const response = await register(user);
+					loadingScreen.hiddenLoading();
 					if (response) {
-						console.log(response);
-						loadingScreen.hiddenLoading();
-						createToast("success", "Successfully.");
+						toast("success", "Successfully.");
 						await setTimeout(() => {
-							createToast("info", "Check your email to get activation link.");
+							toast("info", "Check your email to get activation link.");
 						}, 2000);
 						window.location.href = "http://localhost:3000/#/login";
 					}
 				} catch (error) {
-					console.log(error);
+					toast("error", error.response.data.message);
 				}
 			});
 		}
