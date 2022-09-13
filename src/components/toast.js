@@ -1,4 +1,4 @@
-import { $ } from "../utils/dom-query";
+import { $ } from "../utils/common";
 
 const alert = {
 	success: {
@@ -19,13 +19,13 @@ const alert = {
 	},
 };
 
-const createToast = (status, message) => {
+const toast = (status, message) => {
 	/* Create notification */
 	const { style, icon } = alert[status];
 	const toastNotification = document.createElement("div");
 	toastNotification.classList.add("toast", "toast-top", "toast-end", "animate-fadeInOut");
 	toastNotification.innerHTML = /* html */ `
-					<div class="alert ${style}">
+					<div class="alert text-white ${style}">
 						<div>
 							<i class="${icon}"></i>
 							<span>${message}</span>
@@ -40,4 +40,4 @@ const createToast = (status, message) => {
 	}, 1500);
 };
 
-export default createToast;
+export default toast;
