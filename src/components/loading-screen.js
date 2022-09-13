@@ -1,4 +1,5 @@
-import { $ } from "../utils/dom-query";
+import { $ } from "../utils/common";
+
 const loadingScreen = {
 	showLoading() {
 		const loading = document.createElement("div");
