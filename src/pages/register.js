@@ -77,9 +77,9 @@ const registerPage = {
 				};
 				console.log(user);
 				try {
-					loadingScreen.showLoading();
+					loadingScreen.show();
 					const response = await register(user);
-					loadingScreen.hiddenLoading();
+					loadingScreen.hidden();
 					if (response) {
 						toast("success", "Successfully.");
 						await setTimeout(() => {

@@ -1,23 +1,41 @@
-import "../style.css";
-import javascriptLogo from "./javascript.svg";
-import { setupCounter } from "../counter.js";
+import Navigo from "navigo";
+import { $ } from "./utils/common";
+import instance from "./api/config";
+const router = new Navigo("/", { hash: true });
 
-document.querySelector("#app").innerHTML = /* html */ `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Music app!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`;
+// import pages
+import homePage from "./pages/home";
+import loginPage from "./pages/login";
+import registerPage from "./pages/register";
+import forgotPasswordPage from "./pages/forgot-password";
+import resetPasswordPage from "./pages/reset-password";
+// async function
+document.addEventListener("DOMContentLoaded", () => {
+	const renderPage = async (page, id) => {
+		const app = $("#app");
+		if (app) app.innerHTML = await page.render(id);
+		if (page.afterRender) await page.afterRender();
+	};
+	router.on({
+		"/": async () => {
+			await renderPage(homePage);
+		},
+		"/home": async () => {
+			await renderPage(homePage);
+		},
+		"/login": () => {
+			renderPage(loginPage);
+		},
+		"/register": () => {
+			renderPage(registerPage);
+		},
+		"/forgot-password": () => {
+			renderPage(forgotPasswordPage);
+		},
+		"/reset-password": () => {
+			renderPage(resetPasswordPage);
+		},
+	});
 
-setupCounter(document.querySelector("#counter"));
+	router.resolve();
+});

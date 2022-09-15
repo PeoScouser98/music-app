@@ -55,7 +55,7 @@ const loginPage = {
 						const { accessToken, expiresIn, id } = res;
 						localStorage.setItem("accessToken", JSON.stringify({ accessToken, expiresIn }));
 						localStorage.setItem("id", id);
-						window.location.href = "/#/home";
+						window.location.href = "/#/";
 						toast("success", "Login successfully!");
 					}
 				} catch (error) {

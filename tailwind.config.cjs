@@ -3,17 +3,26 @@ module.exports = {
 	content: ["*.html", "./src/**/*.{html,js}"],
 	theme: {
 		screens: {
-			sm: "375px",
+			sm: {
+				min: "375px",
+				max: "767px",
+			},
 
-			md: "768px",
+			md: {
+				min: "768px",
+				max: "1023px",
+			},
 
-			lg: "1024px",
+			lg: {
+				min: "1024px",
+				max: "1365px",
+			},
 
-			xl: "1366px",
+			xl: { min: "1366px" },
 		},
 		extend: {
 			animation: {
-				fadeInOut: "fadeIn .3s linear, fadeOut .3s 2s linear  forwards",
+				fadeInOut: "fadeIn .3s linear, fadeOut .3s linear 1s forwards",
 				fadeOut: "fadeOut 1s ease-in-out",
 			},
 			keyframes: {

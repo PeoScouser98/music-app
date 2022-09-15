@@ -10,7 +10,8 @@ export const register = async (user) => {
 
 export const getUser = async () => {
 	try {
-		return await instance.get("/user");
+		const response = await instance.get("/user");
+		return response.error && response.error.name === "TokenExpiredError" ? await instance.get("/user") : response;
 	} catch (error) {
 		console.log(error);
 	}

@@ -1,7 +1,7 @@
 import { $ } from "../utils/common";
 
 const loadingScreen = {
-	showLoading() {
+	show() {
 		const loading = document.createElement("div");
 		loading.classList.add("bg-black/70", "w-full", "min-h-screen", "fixed", "top-0", "left-0", "flex", "justify-center", "items-center");
 		loading.id = "loading-status";
@@ -24,7 +24,7 @@ const loadingScreen = {
 		document.body.appendChild(loading);
 	},
 
-	hiddenLoading() {
+	hidden() {
 		const loading = $("#loading-status");
 		document.body.removeChild(loading);
 	},
