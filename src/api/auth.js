@@ -1,4 +1,5 @@
-import instance from "./config";
+import storage from "../utils/localstorage";
+import instance from "./axios.config";
 
 export const login = async (user) => {
 	return await instance.post("/login", user);
@@ -10,7 +11,10 @@ export const register = async (user) => {
 
 export const getUser = async () => {
 	try {
-		const response = await instance.get("/user");
+		const auth = storage.get("auth")
+		if (!auth)
+			return
+		const response = await instance.get(`/user`);
 		return response.error && response.error.name === "TokenExpiredError" ? await instance.get("/user") : response;
 	} catch (error) {
 		console.log(error);
@@ -27,10 +31,9 @@ export const getResetPassword = async (email) => {
 
 export const refreshToken = async () => {
 	try {
-		const id = localStorage.getItem("id");
-		const newAccessToken = await instance.get("/refresh-token/" + id);
-		await instance.setAccessToken(newAccessToken);
-		return newAccessToken;
+		const auth = storage.get("auth");
+		if (auth)
+			return await instance.get("/refresh-token/" + auth.id);
 	} catch (error) {
 		console.log(error);
 	}
@@ -44,7 +47,8 @@ export const resetPassword = async (data) => {
 	}
 };
 
-export function logout() {
-	localStorage.clear();
-	window.location.href = "/#/login";
+export const logout = () => {
+	storage.remove("auth")
+	storage.remove("accessToken") // 
+	location.reload();
 }
