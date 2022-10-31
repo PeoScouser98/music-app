@@ -11,9 +11,8 @@ export const register = async (user) => {
 
 export const getUser = async () => {
 	try {
-		const auth = storage.get("auth")
-		if (!auth)
-			return
+		const auth = storage.get("auth");
+		if (!auth) return;
 		const response = await instance.get(`/user`);
 		return response.error && response.error.name === "TokenExpiredError" ? await instance.get("/user") : response;
 	} catch (error) {
@@ -32,8 +31,7 @@ export const getResetPassword = async (email) => {
 export const refreshToken = async () => {
 	try {
 		const auth = storage.get("auth");
-		if (auth)
-			return await instance.get("/refresh-token/" + auth.id);
+		if (auth) return await instance.get("/refresh-token/" + auth.id);
 	} catch (error) {
 		console.log(error);
 	}
@@ -48,7 +46,7 @@ export const resetPassword = async (data) => {
 };
 
 export const logout = () => {
-	storage.remove("auth")
-	storage.remove("accessToken") // 
+	storage.remove("auth");
+	storage.remove("accessToken"); //
 	location.reload();
-}
+};

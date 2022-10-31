@@ -11,13 +11,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
 	(config) => {
 		/* Bỏ qua check access token với các routes nay */
-		const skippingCheckTokenRoutes = [
-			"/login",
-			"/register",
-			"/refresh-token",
-			"/forgot-password",
-			"/reset-password",
-		];
+		const skippingCheckTokenRoutes = ["/login", "/register", "/refresh-token", "/forgot-password", "/reset-password"];
 		if (skippingCheckTokenRoutes.indexOf(config.url) >= 0) return config;
 		/* Trước khi request xuống server gửi luôn access token trong headers để check */
 		const accessToken = instance.getAccessToken();
@@ -36,22 +30,16 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
 	async (response) => {
 		const { data, config } = response;
-		const skippingCheckTokenRoutes = [
-			"/login",
-			"/register",
-			"/refresh-token",
-			"/forgot-password",
-			"/reset-password",
-		];
+		const skippingCheckTokenRoutes = ["/login", "/register", "/refresh-token", "/forgot-password", "/reset-password"];
 		if (skippingCheckTokenRoutes.indexOf(config.url) >= 0) return data;
 
 		/* ::::::::::: Refresh token ::::::::::: */
-		const auth = storage.get("auth")
+		const auth = storage.get("auth");
 		if (auth && data.statusCode && data.statusCode === 401) {
 			const { accessToken } = await refreshToken(); // create new access token
-			console.log('New access token :>> ', accessToken);
+			console.log("New access token :>> ", accessToken);
 			instance.setAccessToken(accessToken);
-			return data;
+			return await instance.get(config.url);
 		}
 		return data;
 	},
@@ -62,14 +50,12 @@ instance.interceptors.response.use(
 
 /* :::::::::::::: Save access token in localstorage :::::::::::::: */
 instance.setAccessToken = (accessToken) => {
-	if (accessToken)
-		localStorage.setItem("accessToken", accessToken);
+	if (accessToken) storage.set("accessToken", accessToken);
 };
 
 /* :::::::::::::: Get access token from localstorage :::::::::::::: */
 instance.getAccessToken = () => {
-	return storage.get("accessToken")
+	return storage.get("accessToken");
 };
-
 
 export default instance;
