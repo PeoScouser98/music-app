@@ -5,10 +5,11 @@ import playlistSubPage from "./sub-pages/playlist";
 import uploadedSubPage from "./sub-pages/uploaded";
 import artistSubPage from "./sub-pages/artist";
 import artistCard from "../components/cards/artist-card";
-// import 
+import albumSubPage from "./sub-pages/album";
+// import
 const libraryPage = {
-    render() {
-        return /* html */ `
+	render() {
+		return /* html */ `
         <div class="h-full my-10 px-5 sm:px-3" id="page-content">
             <section class="flex justify-between items-center gap-10 flex-wrap mb-16 bg-base-300/80 rounded-lg px-3 sm:flex-row-reverse">
                 <div class="tabs flex-grow max-w-2xl sm:hidden">
@@ -38,40 +39,39 @@ const libraryPage = {
                 <!-- sub-page content here -->
             </section>
         </div>
-        `
-    },
-    handleEvents() {
-        (async () => {
-            reRenderContent("#sub-page-content", await playlistSubPage.render())
-        })()
+        `;
+	},
+	handleEvents() {
+		(async () => {
+			reRenderContent("#sub-page-content", await playlistSubPage.render());
+		})();
 
-        const tabs = $$(".library-menu-item")
-        tabs.forEach((tab, index) => {
-            tab.classList.remove("tab-active")
-            if (index == 0) tab.classList.add("tab-active")
-            tab.onclick = async (e) => {
-                tabs.forEach(tab => tab.classList.remove("tab-active"))
-                e.target.classList.add("tab-active")
-                switch (tab.dataset.subpage) {
-                    case 'playlist':
-                        reRenderContent("#sub-page-content", await playlistSubPage.render())
-                        break;
-                    case 'artist':
-                        reRenderContent("#sub-page-content", await artistSubPage.render())
-                        artistCard.handleEvents()
-                        break;
-                    case 'upload':
-                        reRenderContent("#sub-page-content", await uploadedSubPage.render())
-                        uploadedSubPage.handleEvents()
-                        break;
-                    case 'album':
-
-                        break;
-
-                }
-            }
-        })
-
-    }
+		const tabs = $$(".library-menu-item");
+		tabs.forEach((tab, index) => {
+			tab.classList.remove("tab-active");
+			if (index == 0) tab.classList.add("tab-active");
+			tab.onclick = async (e) => {
+				tabs.forEach((tab) => tab.classList.remove("tab-active"));
+				e.target.classList.add("tab-active");
+				switch (tab.dataset.subpage) {
+					case "playlist":
+						reRenderContent("#sub-page-content", await playlistSubPage.render());
+						break;
+					case "artist":
+						reRenderContent("#sub-page-content", await artistSubPage.render());
+						artistSubPage.handleEvents();
+						break;
+					case "upload":
+						reRenderContent("#sub-page-content", await uploadedSubPage.render());
+						uploadedSubPage.handleEvents();
+						break;
+					case "album":
+						reRenderContent("#sub-page-content", await albumSubPage.render());
+						albumSubPage.handleEvents();
+						break;
+				}
+			};
+		});
+	},
 };
 export default libraryPage;

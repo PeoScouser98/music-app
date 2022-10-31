@@ -11,16 +11,32 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import storage from "../utils/localstorage";
+import { getAlbumsCollection, getArtistsCollection, getTracksCollection } from "../api/collection";
 
 const homePage = {
 	async render() {
-		const auth = storage.get("auth")
+		const auth = storage.get("auth");
 
 		const _tracks = instance.get("/track?limit=5");
 		const _albums = instance.get("/album");
 		const _artists = instance.get("/artist");
-		const [tracks, albums, artists] = await Promise.all([_tracks, _albums, _artists])
-		return /* html */`
+		const _tracksCollection = getTracksCollection();
+		const _artistCollection = getArtistsCollection();
+		const _albumsCollection = getAlbumsCollection();
+		const [tracks, albums, artists, tracksCollection, artistsCollection, albumsCollection] = await Promise.all([_tracks, _albums, _artists, _tracksCollection, _artistCollection, _albumsCollection]);
+		tracks.forEach((track) => {
+			if (tracksCollection?.tracks && Array.isArray(tracksCollection?.tracks)) track.isLiked = tracksCollection.tracks.find((item) => item._id === track._id) != undefined;
+			else track.isLiked = false;
+		});
+		artists.forEach((artist) => {
+			if (artistsCollection && Array.isArray(artistsCollection)) artist.isFollowed = artistsCollection.find((item) => item._id === artist._id) !== undefined;
+			else artist.isFollowed = false;
+		});
+		albums.forEach((album) => {
+			if (albumsCollection && Array.isArray(albumsCollection)) album.isLiked = albumsCollection.find((item) => item._id === album._id) !== undefined;
+			else album.isLiked = false;
+		});
+		return /* html */ `
 			<div class="flex flex-col gap-10 py-8 px-8 sm:px-3 overflow-y-auto h-full invisible-scroll" id="page-content">
 				<section class="relative">
 					<div class="relative z-10">
@@ -33,10 +49,7 @@ const homePage = {
 					<h1 class="text-2xl  sm:text-xl font-semibold mb-5 text-base-content">Artists you also like</h1>
 					<div class="swiper artist-slider">
 						<div class="swiper-wrapper pb-10 container">
-							${artists.map((item) => {
-			if (!item.followers.includes(auth?.id))
-				return /* html */ `<div class="swiper-slide">${artistCard.render(item)}</div>
-							`}).join("")}
+							${Array.isArray(artists) ? artists.map((item) => /* html */ `<div class="swiper-slide">${artistCard.render(item)}</div>`).join("") : ""}
 						</div>
 						<div class="swiper-button-next right-5"><i class="bi bi-arrow-right-short"></i></div>
 						<div class="swiper-button-prev left-4"><i class="bi bi-arrow-left-short"></i></div>
@@ -57,7 +70,6 @@ const homePage = {
 		const swiper = new Swiper(".artist-slider", {
 			modules: [Navigation, Pagination],
 			loop: true,
-			// loopFillGroupWithBlank: true,
 			navigation: {
 				nextEl: ".swiper-button-next",
 				prevEl: ".swiper-button-prev",
@@ -92,12 +104,13 @@ const homePage = {
 					slidesPerView: 5,
 					spaceBetween: 48,
 					slidesPerGroup: 5,
-				}
+				},
 			},
 		});
-		audioController.start()
+		audioController.start();
 		trackCard.handleEvents();
-		artistCard.handleEvents()
+		artistCard.handleEvents();
+		albumCard.handleEvents();
 	},
 };
 export default homePage;

@@ -1,22 +1,17 @@
-import { itMatchesOne } from "daisyui/src/lib/postcss-prefixer/utils"
-import instance from "../api/axios.config"
-import audioController from "../components/root/audio-controller"
-import trackCard from "../components/cards/track-card-v1"
+import { itMatchesOne } from "daisyui/src/lib/postcss-prefixer/utils";
+import instance from "../api/axios.config";
+import audioController from "../components/root/audio-controller";
+import trackCard from "../components/cards/track-card-v1";
+import { $ } from "../utils/common";
+import { getAlbumsCollection, updateAlbumsCollection } from "../api/collection";
+import toast from "../components/notification/toast";
 
 const albumPage = {
-    async render(id) {
-        const { tracks, album } = await instance.get(`/album/${id}`)
-        console.log(tracks);
-        const tracksHTML = Array.isArray(tracks) && tracks.length != 0 ?
-            await (await Promise.all(tracks.map(async (item, index) => {
-                item.artists = [album.artist];
-                item.thumbnail = album.image
-                item.album = album.title
-                console.log(item.thumbnail)
-                return await trackCard.render(item, index)
-            }))).join("")
-            : ""
-        return /* html */`
+	async render(id) {
+		const { tracks, album } = await instance.get(`/album/${id}`);
+		const albumsCollection = await getAlbumsCollection();
+		let isLikedAlbum = albumsCollection.find((album) => album._id === id) !== undefined;
+		return /* html */ `
         <div class="p-5 flex flex-col gap-10">
             <section class="flex justify-between p-10 bg-gradient-to-r from-white/20 to-transparent rounded-box shadow-2xl">
                 <div class="flex items-center gap-5 text-white self-center">
@@ -27,29 +22,46 @@ const albumPage = {
                         <span class="text-zinc-400 text-xl">${tracks.length} tracks</span>
                     </div>
                 </div>
-                <div class="self-end flex items-center gap-5">
+                <label class="self-end flex items-center gap-5">
                     <div class="tooltip " data-tip="Play this album">
                         <button class="btn btn-circle btn-primary text-2xl"><i class="bi bi-play-fill"></i></button>
                     </div>
-                     <div class="tooltip " data-tip="Like">
-                        <button class="btn btn-primary btn-circle text-xl"><i class="bi bi-suit-heart-fill"></i></button>
-                    </div>
-                </div>
+                    <label class="swap btn btn-primary btn-circle text-xl">
+                        <input type="checkbox" id="toggle-like-album" data-album="${album._id}" ${isLikedAlbum ? "checked" : ""}>
+                        <div class="swap-off">
+                            <div class="tooltip" data-tip="Like">
+                                <i class="bi bi-suit-heart"></i>
+                            </div>
+                       </div>
+                        <div class="swap-on">
+                            <div class="tooltip" data-tip="UnLike">
+                                <i class="bi bi-suit-heart-fill"></i>
+                            </div>
+                       </div>
+                        
+                    </label>
+                </label>
             </section>
 
             <section>
-                <div>${tracksHTML}</div>
+                <div>
+                ${Array.isArray(tracks) && tracks.length != 0 ? tracks.map((item, index) => trackCard.render(item, index)).join("") : ""}
+                </div>
             </section>
 
         </div>
-        `
-    },
-    handleEvents() {
-        trackCard.handleEvents()
-        audioController.start()
+        `;
+	},
+	handleEvents() {
+		trackCard.handleEvents();
+		audioController.start();
+		const toggleLikeAlbum = $("#toggle-like-album");
+		if (toggleLikeAlbum)
+			toggleLikeAlbum.onchange = async (e) => {
+				await updateAlbumsCollection({ album: e.target.dataset.album });
+				e.target.checked ? toast("success", "Added this album to your library!") : toast("info", "Removed this album from your library!");
+			};
+	},
+};
 
-    }
-}
-
-
-export default albumPage
+export default albumPage;

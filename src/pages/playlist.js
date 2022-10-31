@@ -1,16 +1,16 @@
-import * as Playlist from "../api/playlist"
-import audioController from "../components/root/audio-controller"
-import trackCard from "../components/cards/track-card-v1"
-import header from "../components/root/header"
-import storage from "../utils/localstorage"
-import { getTracksCollection } from "../api/collection"
-import { $ } from "../utils/common"
+import * as Playlist from "../api/playlist";
+import audioController from "../components/root/audio-controller";
+import trackCard from "../components/cards/track-card-v1";
+import header from "../components/root/header";
+import storage from "../utils/localstorage";
+import { getTracksCollection } from "../api/collection";
+import { $ } from "../utils/common";
 
 const playlistPage = {
 	async render(id) {
-		console.log(id);
-		const playlist = id != 0 ? await Playlist.getOne(id) : await getTracksCollection()
-		const { tracks, creator } = playlist
+		let playlist = !id ? await getTracksCollection() : await Playlist.getOne(id);
+		const { tracks, creator } = playlist;
+		if (Array.isArray(tracks)) tracks.forEach((track) => (track.isLiked = tracks.find((item) => item._id === track._id) !== undefined));
 		return /* html */ `
         <div class="flex flex-col gap-10 overflow-y-auto h-full scroll px-8 py-8 sm:px-2" id="page-content">
 				<!-- banner -->
@@ -34,22 +34,20 @@ const playlistPage = {
 
 				<div class="flex flex-col gap-20 py-10">
 					<section>
-						<div id="track-list">${Array.isArray(tracks) ? (tracks.map((item, index) => trackCard.render(item, index))).join("") : ""}</div>
+						<div id="track-list">${Array.isArray(tracks) ? tracks.map((item, index) => trackCard.render(item, index)).join("") : ""}</div>
 					</section>
 				</div>
 			</div>
-`
-	}, handleEvents() {
-		header.handleEvents()
-		trackCard.handleEvents()
-		audioController.start()
+`;
+	},
+	handleEvents() {
+		header.handleEvents();
+		trackCard.handleEvents();
+		audioController.start();
 
-		const togglePlayPlaylist = $("#toggle-play-playlist")
-		if (togglePlayPlaylist)
-			togglePlayPlaylist.onchange = () => {
+		const togglePlayPlaylist = $("#toggle-play-playlist");
+		if (togglePlayPlaylist) togglePlayPlaylist.onchange = () => {};
+	},
+};
 
-			}
-	}
-}
-
-export default playlistPage
+export default playlistPage;

@@ -3,14 +3,15 @@ import { $ } from "../utils/common";
 import albumCard from "../components/cards/album-card";
 import trackCard from "../components/cards/track-card-v1";
 import audioController from "../components/root/audio-controller";
-
+import { getTracksCollection } from "../api/collection";
+import { injectThemes } from "daisyui/src/colors/functions";
 
 const artistPage = {
 	async render(id) {
-		const { artist, tracks, albums } = await instance.get(`/artist/${id}`);
+		const { artist, tracks, albums, followers } = await instance.get(`/artist/${id}`);
 		artist.wallpaper = artist.wallpaper || "../../assets/img/default-artist-wallpaper.png";
-		const tracksHTML = (await Promise.all(tracks.map((item, index) => trackCard.render(item, index)))).join("")
-
+		const tracksCollection = await getTracksCollection();
+		tracks.forEach((track) => (track.isLiked = tracksCollection.tracks.find((item) => item._id === track._id) !== undefined));
 		return /* html */ `
 			<div class="flex flex-col gap-10 overflow-y-auto h-full scroll px-8 py-8 sm:px-4" id="page-content">
 				<!-- banner -->
@@ -20,7 +21,7 @@ const artistPage = {
 						<img src="${artist.avatar}" class="max-w-full h-52 sm:h-32 rounded-full object-cover object-center" />
 						<div>
 							<h1 class="sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white">${artist.name}</h1>
-							<p class="text-white mb-5">${artist.followers.length} followers</p>
+							<p class="text-white mb-5">${followers} followers</p>
 							<p class="text-white text-xl sm:text-base">${artist.desc}</p>
 						</div>
 					</div>
@@ -30,7 +31,7 @@ const artistPage = {
 				<div class="flex flex-col gap-20 py-10">
 					<section>
 						<h1 class="text-2xl font-semibold mb-3 text-white">Popular</h1>
-						<div>${tracksHTML}</div>
+						<div>${tracks.map((item, index) => trackCard.render(item, index)).join("")}</div>
 					</section>
 
 					<section>
@@ -42,7 +43,7 @@ const artistPage = {
 		`;
 	},
 	handleEvents() {
-		audioController.start()
+		audioController.start();
 
 		trackCard.handleEvents();
 	},

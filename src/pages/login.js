@@ -5,7 +5,6 @@ import toast from "../components/notification/toast";
 import storage from "../utils/localstorage";
 import router from "../main";
 
-
 const loginPage = {
 	render() {
 		return /* html */ `
@@ -19,7 +18,7 @@ const loginPage = {
 						<a href="/#/" class="btn btn-outline btn-lg">Get Started</a>
 					</div>
 					<div class="min-w-[480px] max-w-full glass sm:p-5 md:p-5 lg:p-8 xl:p-6 xxl:p-10 flex flex-col justify-center items-center gap-6 h-fit rounded-box sm:rounded-none sm:min-h-screen sm:w-screen">
-						<img src="./assets/img/logo.png" alt="" class="max-w-full max-h-[140px] xxl:max-h-[180px] object-cover object-center" />
+						<img src="./assets/img/logo.png" alt="" class="max-w-full max-h-[140px] xxl:max-h-[180px] object-cover object-center saturate-100" />
 						<div class="flex flex-col gap-2 w-full">
 							<a href="" class="btn bg-[#1976D2] hover:bg-[#0F6CC8] hover:border-[#1976D2] border-[#1976D2] text-base-content btn-block gap-1"><img src="../../assets/img/facebook.svg" alt=""> Sign in with Facebook account</a>
 							<a href="" class="btn text-base-content btn-block gap-2"><img src="../../assets/img/google.svg" alt=""> Sign in with Google account</a>
@@ -49,6 +48,9 @@ const loginPage = {
 					</div>
 				</div>
 			</div>
+			<!-- toast notification here -->
+			<div id="notification-container" class="fixed top-0 right-0 z-[9999] flex flex-col-reverse gap-1 p-4"></div>
+
 		`;
 	},
 	handleEvents() {
@@ -72,8 +74,7 @@ const loginPage = {
 						const { accessToken, id, username } = res;
 						storage.set("accessToken", accessToken);
 						storage.set("auth", { id: id, username: username });
-						router.navigate("/#/")
-						toast("success", "Login successfully!");
+						router.navigate("/");
 					}
 				} catch (error) {
 					console.log(error);
