@@ -1,5 +1,6 @@
 import { $ } from "../../utils/common";
 import accountDropdown from "../dropdown/account-dropdown";
+import router from "../../main";
 
 const header = {
 	async render() {
@@ -22,7 +23,7 @@ const header = {
 					<form action="" class="sm:hidden md:hidden">
 						<div class="flex justify-start items-center px-3 py-1 border border-base-content/50 rounded-full text-base-content  w-[-webkit-fill-available] min-w-[24rem]">
 							<label for=""><i class="bi bi-search"></i></label>
-							<input type="text" class="input input-sm bg-transparent focus:outline-none w-[-webkit-fill-available] text-base-content" name="" id="" placeholder="Find a track, artist, album . . ." />
+							<input type="text" class="input input-sm bg-transparent focus:outline-none w-[-webkit-fill-available] text-base-content" name="" id="keyword" placeholder="Find a track, artist, album . . ." />
 							<button class="hidden" type="submit">search</button>
 						</div>
 					</form>
@@ -41,14 +42,20 @@ const header = {
 			</nav>`;
 	},
 	async handleEvents() {
-		accountDropdown.handleEvents()
+		accountDropdown.handleEvents();
 
-		const swapTheme = $("#swap-theme")
+		const swapTheme = $("#swap-theme");
 		if (swapTheme)
 			swapTheme.onchange = () => {
-				const document = $("html")
-				document.dataset.theme = swapTheme.checked ? "emerald" : "dracula"
-			}
+				const document = $("html");
+				document.dataset.theme = swapTheme.checked ? "emerald" : "dracula";
+			};
+
+		const keywordInput = $("#keyword");
+		if (keywordInput)
+			keywordInput.onfocus = () => {
+				router.navigate("/search");
+			};
 	},
 };
 export default header;

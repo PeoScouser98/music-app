@@ -4,24 +4,24 @@ import { renderPageContent, reRenderContent } from "../../utils/handle-page";
 import nextUpPage from "../../pages/nextup";
 import storage from "../../utils/localstorage";
 import trackCard from "../cards/track-card-v1";
-import * as Playlist from "../../api/playlist"
+import * as Playlist from "../../api/playlist";
 import toast from "../notification/toast";
 import router from "../../main";
 import playlistPage from "../../pages/playlist";
 import { getTracksCollection, updateTracksCollection } from "../../api/collection";
 
 const audioController = {
-
-	render(track) {
-		const audio = $("#audio-player")
+	async render(track) {
+		const audio = $("#audio-player");
 		audio.src = track?.trackSrc;
 		audio.dataset.current = track?._id;
+		const auth = storage.get("auth");
 
-		let isExistedInList = false
-		const auth = storage.get("auth")
-		if (auth?.id && track?.followers) {
-			console.log(track.followers);
-			isExistedInList = track.followers.find(flw => flw == auth.id) !== undefined
+		let isExistedInList = false;
+		const tracksCollection = await getTracksCollection();
+		if (tracksCollection?.tracks && Array.isArray(tracksCollection?.tracks)) {
+			const { tracks } = tracksCollection;
+			if (tracks.find((item) => item?._id == track?._id)) isExistedInList = true;
 		}
 		return /* html */ `
 				<div class="w-full text-base-content flex flex-wrap xl:flex-nowrap xxl:flex-nowrap justify-between items-center xl:items-start xxl:items-start flex-grow gap-5  p-5 bg-base-200"
@@ -31,7 +31,7 @@ const audioController = {
 						<img src="${track?.thumbnail}" class="max-w-full h-16 sm:h-12 rounded-lg" />
 						<div class="max-w-full overflow-hidden flex flex-col gap-1">
 							<a href="/#/track/${track?._id}" class="text-base font-semibold w-full truncate hover:link" id="playing-track__name">${track?.title}</a>
-							${track?.artists?.map((artist) =>/* html */ `<a href="/#/artist/${artist._id}" class="text-base-content" >${artist?.name}</a>`).join(", ")}
+							${track?.artists?.map((artist) => /* html */ `<a href="/#/artist/${artist._id}" class="text-base-content" >${artist?.name}</a>`).join(", ")}
 						</div>
 					</div>
 						
@@ -93,7 +93,7 @@ const audioController = {
 								<input type="range" min="0" max="100" value="${this.prevVolume}"  class="my-range w-[100px]" id="volume" />
 							</div>
 						</div>
-						<label class="swap items-center">
+						<label class="swap items-center" for="${!auth?.id ? "require-login-modal" : "toggle-like"}">
 							<input type="checkbox" id="toggle-like" ${isExistedInList ? "checked" : ""}  data-track="${track?._id}"/>
 							<div class="swap-on" id="unlike-track-btn">
 								<div class="tooltip z-[100]" data-tip="Unlike">
@@ -132,18 +132,17 @@ const audioController = {
 		this.pauseBtn = $("#pause-btn");
 		this.loopToggle = $("#loop-toggle");
 		this.togglePlay = $("#toggle-play");
-		this.shuffleToggle = $("#shuffle-toggle")
-		this.toggleLike = $("#toggle-like")
-		this.mb_toggleLike = $("#toggle-like-mb")
-		this.likeTrackBtn = $("#like-track-btn")
-		this.unLikeTrackBtn = $("#unlike-track-btn")
-
+		this.shuffleToggle = $("#shuffle-toggle");
+		this.toggleLike = $("#toggle-like");
+		this.mb_toggleLike = $("#toggle-like-mb");
+		this.likeTrackBtn = $("#like-track-btn");
+		this.unLikeTrackBtn = $("#unlike-track-btn");
 
 		this.currentInterval = 0;
-		this.isShuffle = false
-		this.isLoop = false
-		this.nextUp = storage.get("nextUp")
-		this.currentTrackIndex = this.nextUp.indexOf(this.nextUp.find(track => track._id === storage.get("nowPlaying")._id))
+		this.isShuffle = false;
+		this.isLoop = false;
+		this.nextUp = storage.get("nextUp");
+		this.currentTrackIndex = this.nextUp.indexOf(this.nextUp.find((track) => track._id === storage.get("nowPlaying")._id));
 	},
 	play() {
 		const _this = audioController;
@@ -152,7 +151,7 @@ const audioController = {
 				_this.audioProgress.value += 0.001;
 				_this.getCurrentDuration(_this.audio.currentTime);
 			}, 1);
-		})
+		});
 	},
 
 	pause() {
@@ -168,7 +167,7 @@ const audioController = {
 		_this.currentTime.innerText = timer(progress);
 	},
 
-	loadCurrentTrack(data) {
+	async loadCurrentTrack(data) {
 		const _this = audioController;
 		const track = data.track ?? data;
 		const audioContainer = $("#audio-controller-container");
@@ -176,38 +175,33 @@ const audioController = {
 			_this.audio.src = track.trackSrc;
 			_this.audio.dataset.current = track._id;
 			_this.audio.load();
-			const thumbnail = track?.album?.image || track?.artists[0]?.avatar
-			audioContainer.innerHTML = _this.render({ thumbnail, ...track })
-			_this.start()
-
+			const thumbnail = track?.album?.image || track?.artists[0]?.avatar;
+			audioContainer.innerHTML = await _this.render({ thumbnail, ...track });
+			_this.start();
 		}
 	},
 
 	async changeTrack(track) {
 		const _this = audioController;
 
-		// save the current song 
+		// save the current song
 		storage.set("nowPlaying", track);
 
 		// re-render if needed
-		if (location.href.includes("nextup"))
-			await renderPageContent(nextUpPage);
+		if (location.href.includes("nextup")) await renderPageContent(nextUpPage);
 		// reset to the start
 		clearInterval(_this.currentInterval);
 		_this.audioProgress.value = 0;
 		_this.getCurrentDuration(_this.audioProgress.value);
 		// change to the next song
 		_this.loadCurrentTrack(track);
-		_this.play()
-
-
+		_this.play();
 	},
 	prevVolume: 100,
 	adjustVolume() {
 		const _this = audioController;
 
-		if (_this.prevVolume == 0 || _this.prevVolume == 1)
-			_this.prevVolume = _this.audioVolume.value
+		if (_this.prevVolume == 0 || _this.prevVolume == 1) _this.prevVolume = _this.audioVolume.value;
 
 		_this.volumeRange.style.width = `${(_this.prevVolume / _this.audioVolume.max) * 100}%`;
 		_this.audio.volume = _this.prevVolume / 100;
@@ -217,51 +211,39 @@ const audioController = {
 		else _this.volumeBtn.innerHTML = /* html */ `<i class="bi bi-volume-up"></i>`;
 	},
 	async toggleLikeTrack(track, isNotLiked) {
-		if (isNotLiked) {
-			await updateTracksCollection({ track: track })
-			toast("success", "Added to your library!")
-		}
-		else {
-			await updateTracksCollection({ track: track, action: "unfollow" })
-			toast("info", "Removed from your library!")
-		}
+		await updateTracksCollection({ track: track });
+		isNotLiked ? toast("success", "Added to your library!") : toast("info", "Removed from your library!");
 		// re-render if needed
-		const currentRouter = router.current[0]
-		if (currentRouter.url.includes("playlist"))
-			renderPageContent(playlistPage, currentRouter.data.id)
+		const currentRouter = router.current[0];
+		if (currentRouter.url.includes("playlist")) renderPageContent(playlistPage, currentRouter.data.id);
 	},
 	handleEvents() {
 		const _this = audioController;
 
 		/* ::::::::::: fast backward/forward ::::::::::: */
-		//#region 
+		//#region
 		_this.audioProgress.oninput = () => {
 			_this.getCurrentDuration(_this.audioProgress.value);
 			_this.audio.currentTime = _this.audioProgress.value;
 		};
 		//#endregion
 
-
 		/* :::::::::::: Toggle like track ::::::::::::::: */
 		_this.toggleLike.onchange = () => {
-			const track = _this.toggleLike.dataset.track
-			_this.toggleLikeTrack(track, _this.toggleLike.checked)
-		}
-
+			const track = _this.toggleLike.dataset.track;
+			_this.toggleLikeTrack(track, _this.toggleLike.checked);
+		};
 
 		/* ::::::::::: Play track ::::::::::: */
-		//#region 
+		//#region
 		_this.togglePlay.onchange = () => {
-			if (_this.audio.paused === true)
-				_this.play();
-			else
-				_this.pause();
-		}
+			if (_this.audio.paused === true) _this.play();
+			else _this.pause();
+		};
 		//#endregion
 
-
 		/* ::::::::::: Adjust volume ::::::::::: */
-		//#region 
+		//#region
 		_this.audioVolume.oninput = (e) => {
 			_this.prevVolume = e.target.value;
 			_this.adjustVolume();
@@ -274,91 +256,81 @@ const audioController = {
 		};
 		//#endregion
 
-
 		/* ::::::::: Next track :::::::::: */
-		//#region 
+		//#region
 		const nextButton = $("#next-btn");
 		if (nextButton)
 			nextButton.onclick = () => {
-				let newIndex
+				let newIndex;
 				// if shuffle play is turned on -> create random track index
-				if (_this.isShuffle == true)
-					newIndex = _this.currentTrackIndex
+				if (_this.isShuffle == true) newIndex = _this.currentTrackIndex;
 				// if shuffle play is turned off -> track's index will increase
 				else {
-					_this.currentTrackIndex++
-					if (_this.currentTrackIndex == _this.nextUp.length)
-						_this.currentTrackIndex = 0
-					newIndex = _this.currentTrackIndex
+					_this.currentTrackIndex++;
+					if (_this.currentTrackIndex == _this.nextUp.length) _this.currentTrackIndex = 0;
+					newIndex = _this.currentTrackIndex;
 				}
 
 				console.log(newIndex);
 				_this.changeTrack(_this.nextUp[newIndex]);
-				trackCard.handleEvents()
+				trackCard.handleEvents();
 				// _this.togglePlay.checked = !_this.audio.paused
 			};
 		//#endregion
 
-
 		/* ::::::::: Previous track :::::::::: */
-		//#region 
+		//#region
 		const prevButton = $("#prev-btn");
 		if (prevButton)
 			prevButton.onclick = () => {
-				_this.currentTrackIndex--
-				if (_this.currentTrackIndex == -1)
-					_this.currentTrackIndex = _this.nextUp.length - 1
-				let newIndex = _this.currentTrackIndex
+				_this.currentTrackIndex--;
+				if (_this.currentTrackIndex == -1) _this.currentTrackIndex = _this.nextUp.length - 1;
+				let newIndex = _this.currentTrackIndex;
 
 				_this.changeTrack(_this.nextUp[newIndex]);
-				_this.togglePlay.checked = !_this.audio.paused
-				trackCard.handleEvents()
+				_this.togglePlay.checked = !_this.audio.paused;
+				trackCard.handleEvents();
 			};
 		//#endregion
 
-
 		/* ::::::::::: Loop ::::::::::: */
-		//#region 
+		//#region
 		_this.loopToggle.onchange = () => {
 			if (_this.loopToggle.checked) {
-				_this.isLoop = true
+				_this.isLoop = true;
 				_this.audio.loop = _this.loopToggle.checked;
 			}
 		};
 		//#endregion
 
-
 		/* ::::::::::: Shuffle ::::::::::: */
-		//#region 
+		//#region
 		_this.shuffleToggle.onchange = () => {
 			if (_this.shuffleToggle.checked) {
-				_this.isShuffle = true
-				let newIndex = Math.floor(Math.random() * _this.nextUp.length)
-				while (_this.currentTrackIndex === newIndex)
-					_this.currentTrackIndex = Math.floor(Math.random() * _this.nextUp.length)
+				_this.isShuffle = true;
+				let newIndex = Math.floor(Math.random() * _this.nextUp.length);
+				while (_this.currentTrackIndex === newIndex) _this.currentTrackIndex = Math.floor(Math.random() * _this.nextUp.length);
 			}
-		}
+		};
 		//#endregion
 
-
 		/* ::::::::::: Handle audio progress after ended ::::::::::: */
-		//#region 
+		//#region
 		_this.audio.onended = () => {
 			_this.nextUp.push(_this.nextUp.shift());
 			storage.set("nextUp", _this.nextUp);
 			_this.changeTrack(_this.nextUp[0]);
-
 		};
 		//#endregion
 
 		_this.audio.onplay = () => {
-			this.togglePlay.checked = true
-			trackCard.onChange()
-		}
+			this.togglePlay.checked = true;
+			trackCard.onChange();
+		};
 		_this.audio.onpause = () => {
-			this.togglePlay.checked = false
-			trackCard.onChange()
-		}
+			this.togglePlay.checked = false;
+			trackCard.onChange();
+		};
 	},
 	start() {
 		const _this = audioController;

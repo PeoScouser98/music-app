@@ -9,14 +9,8 @@ import trackCardDropdown from "../dropdown/track-card-dropdown";
 
 const trackCard = {
 	render(track, index) {
-		if (track)
-			track.thumbnail =
-				track?.thumbnail ??
-				track?.album?.image ??
-				track?.artists[0]?.avatar
-		else
-			track.thumbnail = "../../assets/img/default-thumbnail.png"
-		return /* html */` 
+		track.thumbnail = track?.album?.image ?? track?.artists[0]?.avatar ?? "../../assets/img/default-thumbnail.png";
+		return /* html */ ` 
 		<div class="track-card group" data-track="${track._id}">
 			<div class="track-card-action">
 				<div class="track-card-index group-hover:hidden">${index + 1}</div>
@@ -45,8 +39,12 @@ const trackCard = {
 					<img src="${track.thumbnail}" class="sm:max-w-[40px] " />
 					<div>
 						<h4 class="track-title sm:max-w-[180px] w-full">${track.title}</h4>
-						${track.artists.map((artist) =>  /* html */ `
-							<a href="/#/artist/${artist?._id}" class="track-artist font-[450]">${artist?.name}</a>`).join(", ")}
+						${track.artists
+							.map(
+								(artist) => /* html */ `
+							<a href="/#/artist/${artist?._id}" class="track-artist font-[450]">${artist?.name}</a>`,
+							)
+							.join(", ")}
 					</div>
 				</div>
 				<div><a href="/#/album/${track?.album?._id}" class="hover:link"> ${track?.album?.title ?? track?.album ?? ""}</a></div>
@@ -66,7 +64,7 @@ const trackCard = {
 		$$(".track-card-index").forEach((id) => id.classList.remove("hidden", "text-primary"));
 		$$(".track-title").forEach((name) => name.classList.remove("text-primary"));
 		$$(".swap-btn").forEach((item) => item.classList.add("hidden", "group-hover:inline-grid"));
-		$$(".toggle-play").forEach(input => input.checked = false)
+		$$(".toggle-play").forEach((input) => (input.checked = false));
 	},
 
 	onSelected(trackElement) {
@@ -79,43 +77,41 @@ const trackCard = {
 			trackIndex.classList.add("text-primary");
 			trackTitle.classList.add("text-primary");
 		}
-
 	},
 
 	onActive(trackElement) {
 		const playBtn = trackElement.querySelector(".swap-btn");
 		const soundWave = trackElement.querySelector(".sound-wave");
 		const trackIndex = trackElement.querySelector(".track-card-index");
-		const togglePlay = trackElement.querySelector(".toggle-play")
+		const togglePlay = trackElement.querySelector(".toggle-play");
 		if (soundWave && playBtn && trackIndex) {
 			soundWave.classList.toggle("hidden");
 			soundWave.classList.add("group-hover:hidden");
 			playBtn.classList.toggle("hidden", "group-hover:inline-grid");
 			trackIndex.classList.toggle("hidden");
-			togglePlay.checked = true
+			togglePlay.checked = true;
 		}
 	},
 
 	onChange() {
 		// const trackCards = $$(".track-card");
 		const audio = $("#audio-player");
-		const selectedTrack = $(`[data-track = "${audio.dataset.current}"]`)
+		const selectedTrack = $(`[data-track = "${audio.dataset.current}"]`);
 		if (selectedTrack) {
 			this.onSelected(selectedTrack);
 			if (!audio.paused) this.onActive(selectedTrack);
-		} else this.onDefault()
-
+		} else this.onDefault();
 	},
 
 	handleEvents() {
-		trackCardDropdown.handleEvents()
+		trackCardDropdown.handleEvents();
 		/* ::::::::::::::: Highlight current track ::::::::::::::::  */
-		this.onChange()
+		this.onChange();
 
 		/* :::::::::::::::::::::::::::::::::::::::::::::::::::::::: */
 		/* ::::::::::::::::::::::: Play track ::::::::::::::::::::: */
 		/* :::::::::::::::::::::::::::::::::::::::::::::::::::::::: */
-		//#region 
+		//#region
 		const audio = $("#audio-player");
 		const playBtns = $$(".play-track-btn");
 		const audioPlayerProgress = $("#audio-player-progress");
@@ -125,14 +121,11 @@ const trackCard = {
 			playBtns.forEach((btn) => {
 				btn.onclick = async () => {
 					this.onChange();
-					const track = btn.dataset.track != audio.dataset.current ?
-						(await Track.getOne(btn.dataset.track)).track :
-						storage.get("nowPlaying")
-					if (track.comments)
-						delete track.comments
+					const track = btn.dataset.track != audio.dataset.current ? (await Track.getOne(btn.dataset.track)).track : storage.get("nowPlaying");
+					if (track.comments) delete track.comments;
 					// if change to the other song -> reset range to default
 					if (btn.dataset.track != audio.dataset.current) {
-						const nextUp = storage.get("nextUp")
+						const nextUp = storage.get("nextUp");
 						const afterSelect = nextUp.filter((item) => item._id != track._id);
 
 						// change index of song
@@ -143,21 +136,21 @@ const trackCard = {
 						storage.set("nowPlaying", track);
 						storage.set("nextUp", afterSelect);
 						changeTrack(track);
-					}
-					else {
+					} else {
 						// continue to play the song in current time
 						getCurrentDuration(audio.currentTime);
 						audioPlayerProgress.value = audio.currentTime;
-						play()
+						play();
 					}
-				}
+				};
 
 				/* ::::::::::: Pause track ::::::::::: */
-				pauseTrackBtns.forEach((btn) =>
-					btn.onclick = () => {
-						console.log(1);
-						pause();
-					}
+				pauseTrackBtns.forEach(
+					(btn) =>
+						(btn.onclick = () => {
+							console.log(1);
+							pause();
+						}),
 				);
 			});
 		//#endregion

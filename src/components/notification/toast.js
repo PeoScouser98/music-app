@@ -22,7 +22,7 @@ const toast = (status, message) => {
 	};
 	/* Create notification */
 	const { style, icon } = alert[status];
-	const toastNotification = createElement(`
+	const toastNotification = createElement(/* html */ `
 		<div class="toast toast-top toast-end animate-fadeInOut z-[9999] relative !m-0 !p-0">
 			<div class="alert text-zinc-800 ${style}">
 				<div>
@@ -31,8 +31,7 @@ const toast = (status, message) => {
 				</div>
 			</div>
 		</div>
-	`
-	);
+	`);
 	/* Toggle message */
 	const notificationContainer = $("#notification-container");
 	if (notificationContainer && toastNotification) {

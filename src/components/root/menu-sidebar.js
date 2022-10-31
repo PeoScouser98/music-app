@@ -9,10 +9,21 @@ import toast from "../notification/toast";
 
 const asideMenu = {
 	async render() {
-		const auth = await getUser()
-		const _userPlaylists = auth != undefined ? getAll() : new Promise(resolve => resolve([]));
-		const _tracksCollection = auth != undefined ? getTracksCollection() : new Promise(resolve => resolve([]));
-		const [userPlaylists, tracksCollection] = await Promise.all([_userPlaylists, _tracksCollection])
+		const auth = await getUser();
+		const _userPlaylists = auth != undefined ? getAll() : new Promise((resolve) => resolve([]));
+		const _tracksCollection = auth != undefined ? getTracksCollection() : new Promise((resolve) => resolve([]));
+		const [userPlaylists, tracksCollection] = await Promise.all([_userPlaylists, _tracksCollection]);
+		const userPlaylistsHTML =
+			userPlaylists !== undefined && Array.isArray(userPlaylists)
+				? userPlaylists
+						.map(
+							(list) => /* html */ `
+									<li class="menu-item">
+										<a href="/#/playlist/${list._id}">${list.title}</a>
+									</li>`,
+						)
+						.join("")
+				: "";
 		return /* html */ `
 			<aside class="drawer-side">
 				<label for="sidebar-toggle" class="drawer-overlay"></label>
@@ -33,17 +44,19 @@ const asideMenu = {
 							<a href="/#/home"><span class="material-symbols-outlined">home</span> Home</a>
 						</li>
 						<li class="menu-item">
-							${auth != undefined ?
-							/* html */ `<a href="/#/playlist/0"><span class="material-symbols-outlined">favorite</span>${tracksCollection.title}</a> ` :
-							/* html */ `<label for="require-login-modal"><span class="material-symbols-outlined">favorite</span>Liked tracks</label>`
-			}
+							${
+								auth != undefined
+									? /* html */ `<a href="/#/liked-tracks"><span class="material-symbols-outlined">favorite</span>${tracksCollection.title}</a> `
+									: /* html */ `<label for="require-login-modal"><span class="material-symbols-outlined">favorite</span>Liked tracks</label>`
+							}
 							
 						</li>
 						<li class="menu-item">
-							${auth != undefined ?
-								/* html */ `<a href="/#/library" class="inline-grid grid-cols-[10%,90%]"><span class="material-symbols-outlined">library_music</span> Library</a>` :
-								/* html */ `<label for="require-login-modal"><span class="material-symbols-outlined">library_music</span> Library</label>`
-			}
+							${
+								auth != undefined
+									? /* html */ `<a href="/#/library" class="inline-grid grid-cols-[10%,90%]"><span class="material-symbols-outlined">library_music</span> Library</a>`
+									: /* html */ `<label for="require-login-modal"><span class="material-symbols-outlined">library_music</span> Library</label>`
+							}
 							
 						</li>
 						<li class="menu-item">
@@ -59,36 +72,33 @@ const asideMenu = {
 						<div class="divider before:bg-zinc-500 after:bg-zinc-500"></div>
 					</ul>
 					<ul class="menu overflow-y-auto h-full scroll text-base xxl:text-lg" id="user-playlist">
-						${userPlaylists
-				.map((list) => {
-					return /* html */ `
-							<li class="menu-item">
-								<a href="/#/playlist/${list._id}">${list.title}</a>
-							</li>`;
-				})
-				.join("")}
+						${userPlaylistsHTML}
 					</ul>
 				</div>
 			</aside>
 					`;
 	},
 	handleEvents() {
-		const sidebar = $(".drawer-side")
+		const sidebar = $(".drawer-side");
 		if (sidebar) {
-			const linkItems = sidebar.querySelectorAll("a")
-			const sidebarToggle = $("#sidebar-toggle")
-			linkItems.forEach(item => item.onclick = () => {
-				sidebarToggle.checked = false
-			})
+			const linkItems = sidebar.querySelectorAll("a");
+			const sidebarToggle = $("#sidebar-toggle");
+			linkItems.forEach(
+				(item) =>
+					(item.onclick = () => {
+						sidebarToggle.checked = false;
+					}),
+			);
 		}
 
-		const menuItems = $$(".menu-item")
-		menuItems.forEach(item => item.onclick = () => {
-			menuItems.forEach(item => item.classList.remove("menu-item-active"))
-			item.classList.add("menu-item-active")
-		})
-
-
-	}
+		const menuItems = $$(".menu-item");
+		menuItems.forEach(
+			(item) =>
+				(item.onclick = () => {
+					menuItems.forEach((item) => item.classList.remove("menu-item-active"));
+					item.classList.add("menu-item-active");
+				}),
+		);
+	},
 };
 export default asideMenu;
