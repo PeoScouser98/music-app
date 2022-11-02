@@ -2,7 +2,7 @@ import { $ } from "../utils/common";
 import { register } from "../api/auth";
 import rules from "../utils/validate";
 import toast from "../components/notification/toast";
-import { toggleLoadingBtn } from "../utils/loading";
+import { toggleLoadingBtn } from "../components/loading/loading";
 const registerPage = {
 	render() {
 		return /* html */ `
@@ -78,11 +78,11 @@ const registerPage = {
 				};
 				console.log(user);
 				try {
-					toggleLoadingBtn({ selector: "#register-submit-btn", isDone: false })
+					toggleLoadingBtn({ selector: "#register-submit-btn", isDone: false });
 					const response = await register(user);
 
 					if (response) {
-						toggleLoadingBtn({ selector: "#register-submit-btn", isDone: true })
+						toggleLoadingBtn({ selector: "#register-submit-btn", isDone: true });
 						toast("success", "Successfully.");
 						await setTimeout(() => {
 							toast("info", "Check your email to get activation link.");

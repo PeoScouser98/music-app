@@ -1,6 +1,5 @@
 import "./index.css";
-import "../node_modules/bootstrap-icons/font/bootstrap-icons.css"
-// import "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 
 import Navigo from "navigo";
 import { render, renderPageContent } from "./utils/handle-page";
@@ -22,21 +21,21 @@ import albumPage from "./pages/album";
 import playlistPage from "./pages/playlist";
 import storage from "./utils/localstorage";
 import libraryPage from "./pages/library";
-
+import notFoundPage from "./pages/404";
+import searchPage from "./pages/search";
 
 const router = new Navigo("/", { hash: true });
 
 document.addEventListener("DOMContentLoaded", async () => {
+	await render(mainLayout);
+
 	router.hooks({
-		before: async (done) => {
-			const nextUp = storage.get("nextUp")
-			if (nextUp === null || nextUp.length == 0)
-				getNowPlayingTrack()
+		before: (done) => {
+			const nextUp = storage.get("nextUp");
+			if (!nextUp) storage.set("nextUp", []);
 			done();
 		},
 	});
-
-	await render(mainLayout);
 
 	router.on({
 		"/": async () => {
@@ -59,28 +58,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 			render(resetPasswordPage);
 		},
 		"/library": () => {
-			renderPageContent(libraryPage)
+			renderPageContent(libraryPage);
 		},
 		"/artist/:id": ({ data }) => {
 			const { id } = data;
 			renderPageContent(artistPage, id);
 		},
 		"album/:id": ({ data }) => {
-			const { id } = data
-			renderPageContent(albumPage, id)
+			const { id } = data;
+			renderPageContent(albumPage, id);
 		},
 		"/nextup": () => {
 			renderPageContent(nextUpPage);
 		},
-		"/playlist/:id": async ({ data }) => {
+		"/liked-tracks": () => {
+			renderPageContent(playlistPage);
+		},
+		"/playlist/:id": ({ data }) => {
 			const { id } = data;
-			await renderPageContent(playlistPage, id);
+			renderPageContent(playlistPage, id);
+		},
+		"/search": () => {
+			renderPageContent(searchPage);
 		},
 	});
 
 	router.notFound(
 		() => {
-			$("#app").innerHTML = /* html */ `<h1>404! Not found</h1>`;
+			render(notFoundPage);
 		},
 		{
 			leave: (done) => {
@@ -91,10 +96,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 	);
 
 	router.resolve();
-})
-
-
-
-
+});
 
 export default router;

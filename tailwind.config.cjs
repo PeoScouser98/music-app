@@ -3,20 +3,50 @@ module.exports = {
 	content: ["./*.{html,js}", "./src/**/*.{html,js}"],
 	theme: {
 		daisyui: {
-			themes: ["light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave", "retro", "cyberpunk", "valentine", "halloween", "garden", "forest", "aqua", "lofi", "pastel", "fantasy", "wireframe", "black", "luxury", "dracula", "cmyk", "autumn", "business", "acid", "lemonade", "night", "coffee", "winter"],
+			themes: [
+				"light",
+				"dark",
+				"cupcake",
+				"bumblebee",
+				"emerald",
+				"corporate",
+				"synthwave",
+				"retro",
+				"cyberpunk",
+				"valentine",
+				"halloween",
+				"garden",
+				"forest",
+				"aqua",
+				"lofi",
+				"pastel",
+				"fantasy",
+				"wireframe",
+				"black",
+				"luxury",
+				"dracula",
+				"cmyk",
+				"autumn",
+				"business",
+				"acid",
+				"lemonade",
+				"night",
+				"coffee",
+				"winter",
+			],
 		},
 		containerQuery: {
-			xs: '120px',
-			sm: '240px',
-			md: '360px',
+			xs: "120px",
+			sm: "240px",
+			md: "360px",
 		},
 		containerType: {
-			size: 'size',
+			size: "size",
 		},
 		screens: {
 			xs: {
 				min: "300px",
-				max: "374px"
+				max: "374px",
 			},
 			sm: {
 				min: "375px",
@@ -35,9 +65,9 @@ module.exports = {
 			xxl: { min: "1920px" },
 		},
 		extend: {
-			colors: {
-				'primary': "var(--p)",
-			},
+			// colors: {
+			// 	'primary': "var(--p)",
+			// },
 			animation: {
 				fadeInOut: "fadeIn .3s linear, fadeOut 1s linear 1s forwards",
 				jumping: "jumping 1.2s linear infinite",
@@ -63,8 +93,5 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [
-		require("daisyui"),
-		require("tailwindcss-container-query"),
-	],
+	plugins: [require("daisyui"), require("tailwindcss-container-query")],
 };

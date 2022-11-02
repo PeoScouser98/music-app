@@ -1,7 +1,7 @@
 import { $ } from "../utils/common";
 import audioController from "../components/root/audio-controller";
 
-import trackCard from "../components/cards/track-card-v1";
+import trackCard from "../components/cards/track-card";
 import instance from "../api/axios.config";
 import albumCard from "../components/cards/album-card";
 import artistCard from "../components/cards/artist-card";
@@ -55,7 +55,7 @@ const homePage = {
 						<div class="swiper-button-prev left-4"><i class="bi bi-arrow-left-short"></i></div>
 					</div>
 			
-					<div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-5"></div>
+					<!-- <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-5"></div> -->
 				</section>
 			
 				<section>

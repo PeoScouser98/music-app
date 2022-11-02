@@ -27,10 +27,10 @@ const asideMenu = {
 		return /* html */ `
 			<aside class="drawer-side">
 				<label for="sidebar-toggle" class="drawer-overlay"></label>
-				<div class="menu invisible-scroll p-5 overflow-y-auto w-80 bg-base-300 text-base-content text-lg relative">
+				<div class="menu invisible-scroll p-5 overflow-y-auto w-80 bg-base-300 text-lg relative">
 					<!-- Sidebar content here -->
-					<a href="/#/" class="text-left">
-						<img src="./assets/img/logo.png" alt="" class="max-w-[16rem] object-center object-cover -translate-x-4" />
+					<a href="/#/" class="text-left inline-flex items-center">
+						<img src="./assets/img/logo.png" alt="" class="max-w-[16rem] h-28 object-center object-cover -translate-x-4" />
 					</a>
 					<form action="" class="sm:block md:block lg:hidden xl:hidden mb-10">
 						<div class="flex justify-start items-center px-5 border border-zinc-600 rounded-full ">

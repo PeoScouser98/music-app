@@ -8,11 +8,11 @@ const albumCard = {
 	render(album) {
 		const auth = storage.get("auth");
 		return /* html */ `
-         <div class="bg-base-200 hover:bg-base-300 duration-300 rounded-box shadow-xl p-5 sm:p-3 flex flex-col gap-3 w-fit relative">
+         <div class="bg-base-200 hover:bg-base-300 duration-300 rounded-box shadow-lg p-5 sm:p-3 flex flex-col gap-3 w-fit relative">
             <a href="/#/album/${album._id}" class="max-w-full group">
                <div class="max-w-full max-h-[224px] mask-square mx-auto relative">
                   <img src="${album.image}" alt="" class="max-w-full w-full h-full mx-auto object-cover object-center group-hover:cursor-pointer">
-                  <button class="absolute bottom-1 right-1 btn btn-circle btn-primary text-xl opacity-0 duration-500 group-hover:opacity-100"><i class="bi bi-play-fill"></i></button>
+                  <button class="absolute bottom-1 right-1 btn btn-circle btn-accent text-xl opacity-0 duration-500 group-hover:opacity-100"><i class="bi bi-play-fill"></i></button>
                </div>
             </a>
          
@@ -24,7 +24,7 @@ const albumCard = {
                >
                   <input type="checkbox" class="toggle-like-album" ${album.isLiked ? "checked" : ""} data-album="${album?._id}">
                   <div class="swap-on tooltip z-[100]" data-tip="Unlike album">
-                     <span class="material-symbols-sharp text-primary">favorite</span>
+                     <span class="material-symbols-sharp text-accent">favorite</span>
                   </div>
                   <div class="swap-off">
                      <div class="tooltip z-[100]" data-tip="Like album">

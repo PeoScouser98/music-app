@@ -1,6 +1,6 @@
 import * as Playlist from "../api/playlist";
 import audioController from "../components/root/audio-controller";
-import trackCard from "../components/cards/track-card-v1";
+import trackCard from "../components/cards/track-card";
 import header from "../components/root/header";
 import storage from "../utils/localstorage";
 import { getTracksCollection } from "../api/collection";

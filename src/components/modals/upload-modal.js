@@ -3,7 +3,7 @@ import instance from "../../api/axios.config";
 import { uploadTrack } from "../../api/track";
 import toast from "../notification/toast";
 import { RadioSelect, CheckboxSelect } from "../dropdown/custom-select";
-import { toggleLoadingBtn } from "../../utils/loading";
+import { toggleLoadingBtn } from "../loading/loading";
 import storage from "../../utils/localstorage";
 
 const uploadForm = {
@@ -15,7 +15,7 @@ const uploadForm = {
 	},
 
 	render() {
-		const auth = storage.get("auth")
+		const auth = storage.get("auth");
 		return auth != null
 			? /* html */ `
 					<input type="checkbox" class="modal-toggle" id="upload-modal-toggle" />
@@ -46,12 +46,12 @@ const uploadForm = {
 										name="file"
 										data-name="File"
 										id="file"
-										class="file:mr-4 file:py-3 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:btn-primary"
+										class="file:mr-4 file:py-3 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:btn-accent"
 									/>
 									<small class="error-message"></small>
 								</div>
 
-								<button type="submit" class="btn btn-primary" id="upload-submit-btn">Upload</button>
+								<button type="submit" class="btn btn-accent" id="upload-submit-btn">Upload</button>
 							</form>
 						</div>
 					</div>

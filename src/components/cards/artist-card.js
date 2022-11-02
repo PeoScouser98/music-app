@@ -13,16 +13,16 @@ const artistCard = {
 		const toggleFollowBtn = /* html */ `
             <label class="swap" ${!auth?.id ? 'for="require-login-modal"' : ""}>
                <input type="checkbox" class="toggle-follow-artist" ${artist.isFollowed ? "checked" : ""} data-id="${artist._id}" data-name="${artist.name}">
-               <div class="swap-off tooltip tooltip-open tooltip-primary text-2xl" data-tip="Follow this Artist">
+               <div class="swap-off tooltip tooltip-open tooltip-accent text-2xl" data-tip="Follow this Artist">
                   <i class="bi bi-person-check"></i>
                </div>
-               <div class="swap-on tooltip tooltip-open tooltip-primary text-2xl" data-tip="Unfollow this Artist">
+               <div class="swap-on tooltip tooltip-open tooltip-accent text-2xl" data-tip="Unfollow this Artist">
                   <i class="bi bi-person-x"></i>
                </div>
             </label>`;
 
 		return /* html */ `
-         <div class="relative overflow-hidden flex flex-col justify-between items-stretch gap-3 p-5 max-w-fit max-h-[500px] bg-base-200 hover:bg-base-300 duration-300 rounded-box shadow-xl gradient-border hover:cursor-grab">
+         <div class="relative overflow-hidden flex flex-col justify-between items-stretch gap-3 p-5 max-w-full max-h-[500px] bg-base-200 hover:bg-base-300 duration-300 rounded-box shadow-lg gradient-border hover:cursor-grab">
             <div class="relative group z-20 self-center">
                <div class="absolute top-0 right-0 left-0 bottom-0 w-full h-full rounded-full bg-black/50 flex justify-center items-center opacity-0 duration-300 group-hover:opacity-100">
                   <!-- toggle follow/unfollow -->

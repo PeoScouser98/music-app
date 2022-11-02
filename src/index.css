@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-	--p: rgba(31, 178, 166, 1);
+	/* --p: rgba(31, 178, 166, 1); */
 	/* --b1: */
 	--tooltip-color: rgba(31, 178, 166, 1);
 }
@@ -39,14 +39,14 @@
 }
 @layer utilities {
 	:target {
-		@apply text-primary;
+		@apply text-accent;
 	}
 	/* input range */
 	.range-container {
 		@apply relative flex items-center w-full;
 	}
 	.range-progress {
-		@apply absolute top-0 z-[1] block h-1 rounded-[0.2rem] bg-primary;
+		@apply absolute top-0 z-[1] block h-1 rounded-[0.2rem] bg-accent;
 	}
 
 	.range-container:hover > .my-range::-webkit-slider-thumb {
@@ -56,7 +56,7 @@
 		@apply appearance-none border-none rounded-sm outline-none h-1 w-[-webkit-fill-available] bg-zinc-600/30 z-[2] duration-[all_ease_500];
 	}
 	.my-range::-webkit-slider-thumb {
-		@apply appearance-none h-3 w-3 rounded-full bg-primary outline-none duration-300 opacity-0;
+		@apply appearance-none h-3 w-3 rounded-full bg-accent outline-none duration-300 opacity-0;
 	}
 	.my-range::-webkit-slider-thumb:hover {
 		@apply shadow-[0_0_0.25rem_0.5rem_rgba(31,178,166,0.3)] opacity-100;
@@ -80,7 +80,7 @@
 		@apply w-3;
 	}
 	.scroll::-webkit-scrollbar-thumb {
-		@apply bg-primary;
+		@apply bg-accent;
 	}
 
 	/* heading text */
@@ -94,36 +94,42 @@
 }
 @layer components {
 	.tab {
-		@apply sm:tab-xs md:tab-md lg:tab-md xl:tab-lg xxl:tab-lg text-base-content/70 basis-1/4;
+		@apply sm:tab-xs md:tab-md lg:tab-md xl:tab-lg xxl:tab-lg text-base-content basis-1/4;
 	}
 	.tab-bordered.tab-active {
-		@apply border-primary text-primary;
+		@apply text-accent font-medium border-accent;
 	}
-	.radio-primary {
-		@apply checked:bg-primary checked:outline-primary checked:border-primary;
+	.tab-lifted.tab-active {
+		@apply text-accent font-medium;
+	}
+	.tabs-boxed.tab-active {
+		@apply btn btn-accent text-accent;
+	}
+	.radio-accent {
+		@apply checked:bg-accent checked:outline-accent checked:border-accent;
 	}
 
 	.tooltip {
 		@apply z-[100];
 	}
-	.tooltip-primary {
+	.tooltip-accent {
 		--tooltip-color: rgba(31, 178, 166, 1);
 	}
 
 	.btn {
 		@apply normal-case;
 	}
-	.btn-primary {
-		@apply bg-primary border-primary outline-primary hover:bg-teal-600 hover:border-teal-600 hover:outline-teal-600 text-zinc-900;
-	}
+	/* .btn-accent {
+		@apply bg-accent border-accent outline-accent hover:bg-teal-600 hover:border-teal-600 hover:outline-teal-600 text-zinc-900;
+	} */
 	.loader-sm {
-		@apply pointer-events-none rounded-full border-transparent border-t-primary animate-spin w-6 h-6  border-[3px];
+		@apply pointer-events-none rounded-full border-transparent border-t-accent animate-spin w-6 h-6  border-[3px];
 	}
 	.loader-md {
-		@apply pointer-events-none rounded-full border-transparent border-t-primary animate-spin w-10 h-10 border-[3px];
+		@apply pointer-events-none rounded-full border-transparent border-t-accent animate-spin w-10 h-10 border-[3px];
 	}
 	.loader-lg {
-		@apply pointer-events-none rounded-full border-transparent border-t-primary animate-spin w-14 h-14 border-[4px];
+		@apply pointer-events-none rounded-full border-transparent border-t-accent animate-spin w-14 h-14 border-[4px];
 	}
 	/* swiper */
 	.swiper-button-next,
@@ -136,14 +142,14 @@
 	}
 	.swiper-button-next > i,
 	.swiper-button-prev > i {
-		@apply w-full h-full btn btn-circle btn-sm btn-primary text-2xl font-medium;
+		@apply w-full h-full btn btn-circle btn-sm btn-accent text-2xl font-medium;
 	}
 
 	.menu > li {
-		@apply text-base-content/70 hover:text-base-content rounded-lg;
+		@apply text-base-content/80 hover:text-base-content rounded-lg;
 	}
 	.menu > li:acitve {
-		@apply text-primary;
+		@apply text-accent;
 	}
 	.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):focus),
 	.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):hover) {
@@ -154,7 +160,7 @@
 		@apply text-base-content;
 	}
 	.menu-item-active {
-		@apply bg-base-content/10 !text-primary font-medium;
+		@apply bg-base-content/10 text-base-content font-medium;
 	}
 	.form-control > .input,
 	.form-control > .custom-select {
@@ -208,13 +214,13 @@
 	.track-card-body > div:nth-child(2),
 	.track-card-body > div:nth-child(3),
 	.track-card-body > div:nth-child(4) {
-		@apply sm:hidden md:hidden lg:hidden text-base-content/70 group-hover:text-base-content text-left;
+		@apply sm:hidden md:hidden lg:hidden text-base-content/80 group-hover:text-base-content text-left;
 	}
 	.track-title {
-		@apply max-w-[-webkit-fill-available] font-[450] text-base truncate;
+		@apply max-w-[-webkit-fill-available] font-medium text-base truncate;
 	}
 	.track-artist {
-		@apply text-base-content/50 hover:link;
+		@apply text-base-content/80 hover:link;
 	}
 	.track-card-dropdown {
 		@apply text-base-content flex items-center gap-5;
@@ -224,7 +230,7 @@
 		@apply flex justify-center items-end gap-1 w-full h-12 sm:h-10;
 	}
 	.sound-wave div {
-		@apply w-[3px] sm:w-[2px] h-[10%] bg-primary animate-jumping;
+		@apply w-[3px] sm:w-[2px] h-[10%] bg-accent animate-jumping;
 	}
 	.scroll {
 		@apply: w-1;
@@ -246,6 +252,6 @@
 	}
 
 	.gradient-border::after {
-		@apply absolute top-[-60px] [content:''] w-[500px] h-16 bg-gradient-to-r from-[hsl(var(--p))] via-[#394CF3] to-[#EF2E92];
+		@apply absolute top-[-60px] right-0 left-0 [content:''] w-full h-16 bg-gradient-to-r from-[hsl(var(--a))] to-[hsl(var(--p))];
 	}
 }

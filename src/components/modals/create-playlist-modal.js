@@ -6,7 +6,7 @@ import storage from "../../utils/localstorage";
 
 const createPlaylistModal = {
 	render() {
-		const auth = storage.get("auth")
+		const auth = storage.get("auth");
 
 		return auth != undefined
 			? /* html */ `
@@ -21,7 +21,7 @@ const createPlaylistModal = {
 									<input type="text" name="playlist-title" data-name="Track's name" class="input input-bordered bg-transparent" required />
 									<small class="error-message text-error font-medium"></small>
 								</div>
-								<button type="submit" class="btn btn-primary self-end w-24 normal-case">Save</button>
+								<button type="submit" class="btn btn-accent self-end w-24 normal-case">Save</button>
 							</form>
 						</div>
 					</div>
@@ -42,11 +42,12 @@ const createPlaylistModal = {
 
 						/* re-render playlist */
 						$("#user-playlist").innerHTML = userPlaylist
-							.map((list) => /* html */ `
+							.map(
+								(list) => /* html */ `
 								<li>
 									<a href="/#/playlist/${list._id}">${list.title}</a>
 								</li>
-							`
+							`,
 							)
 							.join("");
 

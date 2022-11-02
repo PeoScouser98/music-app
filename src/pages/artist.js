@@ -1,7 +1,7 @@
 import instance from "../api/axios.config";
 import { $ } from "../utils/common";
 import albumCard from "../components/cards/album-card";
-import trackCard from "../components/cards/track-card-v1";
+import trackCard from "../components/cards/track-card";
 import audioController from "../components/root/audio-controller";
 import { getTracksCollection } from "../api/collection";
 import { injectThemes } from "daisyui/src/colors/functions";

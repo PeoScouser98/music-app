@@ -3,12 +3,13 @@ import timer from "../../utils/timer";
 import { renderPageContent, reRenderContent } from "../../utils/handle-page";
 import nextUpPage from "../../pages/nextup";
 import storage from "../../utils/localstorage";
-import trackCard from "../cards/track-card-v1";
+import trackCard from "../cards/track-card";
 import * as Playlist from "../../api/playlist";
 import toast from "../notification/toast";
 import router from "../../main";
 import playlistPage from "../../pages/playlist";
 import { getTracksCollection, updateTracksCollection } from "../../api/collection";
+import { debounce } from "../../utils/common";
 
 const audioController = {
 	async render(track) {
@@ -53,8 +54,8 @@ const audioController = {
 								<!-- toggle shuffle play -->
 								<label class="swap text-base-content/50 hover:text-base-content">
 									<input type="checkbox" id="shuffle-toggle" ${this.isShuffle ? "checked" : ""}>
-									<div class="swap-on text-2xl text-primary"><i class="bi bi-shuffle text-xl "></i></div>
-									<div class="swap-off text-2xl hover:text-primary-content"><i class="bi bi-shuffle text-xl "></i></div>
+									<div class="swap-on text-2xl text-accent"><i class="bi bi-shuffle text-xl "></i></div>
+									<div class="swap-off text-2xl hover:text-accent-content"><i class="bi bi-shuffle text-xl "></i></div>
 								</label>
 								<!-- previous -->
 								<button class="btn btn-ghost btn-circle hover:bg-transparent text-2xl text-base-content/50 hover:text-base-content change-track-btn" id="prev-btn" data-value="-1">
@@ -63,10 +64,10 @@ const audioController = {
 								<!-- toggle play -->
 								<label class="swap swap-rotate group">
 									<input type="checkbox" id="toggle-play" ${audio.paused ? "" : "checked"}/>
-									<div class="swap-off bg-transparent text-4xl text-base-content group-hover:text-primary" id="play-btn">
+									<div class="swap-off bg-transparent text-4xl text-base-content group-hover:text-accent" id="play-btn">
 										<i class="bi bi-play-circle"></i>
 									</div>
-									<div class="swap-on bg-transparent text-4xl text-base-content group-hover:text-primary" id="pause-btn">
+									<div class="swap-on bg-transparent text-4xl text-base-content group-hover:text-accent" id="pause-btn">
 										<i class="bi bi-pause-circle"></i>
 									</div>
 								</label>
@@ -77,8 +78,8 @@ const audioController = {
 								<!-- toggle loop -->
 								<label class="swap text-base-content/50 hover:text-base-content">
 									<input type="checkbox" id="loop-toggle" ${this.isLoop ? "checked" : ""}/>
-									<div class="swap-on text-2xl text-primary"><i class="swap-off bi bi-repeat-1"></i></div>
-									<div class="swap-off text-2xl hover:text-primary-content"><i class="swap-off bi bi-repeat"></i></div>
+									<div class="swap-on text-2xl text-accent"><i class="swap-off bi bi-repeat-1"></i></div>
+									<div class="swap-off text-2xl hover:text-accent-content"><i class="swap-off bi bi-repeat"></i></div>
 								</label>
 							</div>
 						</div>
@@ -97,7 +98,7 @@ const audioController = {
 							<input type="checkbox" id="toggle-like" ${isExistedInList ? "checked" : ""}  data-track="${track?._id}"/>
 							<div class="swap-on" id="unlike-track-btn">
 								<div class="tooltip z-[100]" data-tip="Unlike">
-									<span class="material-symbols-sharp text-primary">favorite</span>
+									<span class="material-symbols-sharp text-accent">favorite</span>
 								</div>
 							</div>
 							<div class="swap-off" id="like-track-btn">
@@ -229,10 +230,10 @@ const audioController = {
 		//#endregion
 
 		/* :::::::::::: Toggle like track ::::::::::::::: */
-		_this.toggleLike.onchange = () => {
+		_this.toggleLike.onchange = debounce(() => {
 			const track = _this.toggleLike.dataset.track;
 			_this.toggleLikeTrack(track, _this.toggleLike.checked);
-		};
+		}, 1000);
 
 		/* ::::::::::: Play track ::::::::::: */
 		//#region

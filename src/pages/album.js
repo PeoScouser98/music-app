@@ -1,7 +1,7 @@
 import { itMatchesOne } from "daisyui/src/lib/postcss-prefixer/utils";
 import instance from "../api/axios.config";
 import audioController from "../components/root/audio-controller";
-import trackCard from "../components/cards/track-card-v1";
+import trackCard from "../components/cards/track-card";
 import { $ } from "../utils/common";
 import { getAlbumsCollection, updateAlbumsCollection } from "../api/collection";
 import toast from "../components/notification/toast";

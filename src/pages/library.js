@@ -1,17 +1,18 @@
 import { $$ } from "../utils/common";
 import { reRenderContent } from "../utils/handle-page";
-import { toggleLoadingPageContent } from "../utils/loading";
+// import { toggleLoadingPageContent } from "../utils/loading";
 import playlistSubPage from "./sub-pages/playlist";
-import uploadedSubPage from "./sub-pages/uploaded";
+import tracksSubpage from "./sub-pages/track";
 import artistSubPage from "./sub-pages/artist";
 import artistCard from "../components/cards/artist-card";
 import albumSubPage from "./sub-pages/album";
+import { getArtistsCollection } from "../api/collection";
 // import
 const libraryPage = {
 	render() {
 		return /* html */ `
         <div class="h-full my-10 px-5 sm:px-3" id="page-content">
-            <section class="flex justify-between items-center gap-10 flex-wrap mb-16 bg-base-300/80 rounded-lg px-3 sm:flex-row-reverse">
+            <section class="flex justify-between items-center gap-10 flex-wrap mb-16 bg-base-200 rounded-lg px-3 sm:flex-row-reverse">
                 <div class="tabs flex-grow max-w-2xl sm:hidden">
                     <a class="tab tab-bordered library-menu-item text-base" data-subpage="playlist">Playlists</a> 
                     <a class="tab tab-bordered library-menu-item text-base" data-subpage="artist">Followed Aritsts</a> 
@@ -58,12 +59,13 @@ const libraryPage = {
 						reRenderContent("#sub-page-content", await playlistSubPage.render());
 						break;
 					case "artist":
-						reRenderContent("#sub-page-content", await artistSubPage.render());
+						const followedArtists = await getArtistsCollection();
+						reRenderContent("#sub-page-content", await artistSubPage.render(followedArtists));
 						artistSubPage.handleEvents();
 						break;
 					case "upload":
-						reRenderContent("#sub-page-content", await uploadedSubPage.render());
-						uploadedSubPage.handleEvents();
+						const uploadedTrack = await reRenderContent("#sub-page-content", await tracksSubpage.render());
+						tracksSubpage.handleEvents();
 						break;
 					case "album":
 						reRenderContent("#sub-page-content", await albumSubPage.render());

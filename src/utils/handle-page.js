@@ -1,5 +1,5 @@
 import { $ } from "./common";
-import { toggleLoadingPageContent } from "./loading";
+// import { toggleLoadingPageContent } from "./loading";
 
 export const render = async (layout) => {
 	const app = $("#app");
@@ -9,19 +9,13 @@ export const render = async (layout) => {
 
 export const renderPageContent = async (page, id) => {
 	const main = $("#main");
-	// toggleLoadingPageContent("#main", false)
-	if (main)
-		main.innerHTML = await page.render(id);
-
-	// toggleLoadingPageContent(true)
+	if (main) main.innerHTML = await page.render(id);
 	if (page.handleEvents) page.handleEvents();
 	const pageContent = $("#page-content");
 	if (pageContent) pageContent.scrollIntoView();
 };
 
 export const reRenderContent = (selector, content) => {
-	const contentContainer = $(selector)
-	if (contentContainer)
-		contentContainer.innerHTML = content;
-
+	const contentContainer = $(selector);
+	if (contentContainer) contentContainer.innerHTML = content;
 };

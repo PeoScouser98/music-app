@@ -22,7 +22,7 @@ const trackCard = {
 					<div></div>
 				</div>
 				<label
-					class="swap swap-rotate swap-btn hidden btn btn-ghost btn-circle text-xl sm:text-base sm:btn-sm sm:w-10 sm:h-10 sm:rounded-full hover:btn-primary sm:btn-ghost group-hover:inline-grid group-hover:items-center">
+					class="swap swap-rotate swap-btn hidden btn btn-ghost btn-circle text-xl sm:text-base sm:btn-sm sm:w-10 sm:h-10 sm:rounded-full hover:btn-accent sm:btn-ghost group-hover:inline-grid group-hover:items-center">
 					<input type="checkbox" class="toggle-play" />
 						<div class="swap-on play-track-btn" data-track="${track._id}">
 							<i class="bi bi-pause-fill"></i>
@@ -61,8 +61,8 @@ const trackCard = {
 	onDefault() {
 		// reset all by default and just highlight the selected one
 		$$(".sound-wave").forEach((sw) => sw.classList.add("hidden"));
-		$$(".track-card-index").forEach((id) => id.classList.remove("hidden", "text-primary"));
-		$$(".track-title").forEach((name) => name.classList.remove("text-primary"));
+		$$(".track-card-index").forEach((id) => id.classList.remove("hidden", "text-accent"));
+		$$(".track-title").forEach((name) => name.classList.remove("text-accent"));
 		$$(".swap-btn").forEach((item) => item.classList.add("hidden", "group-hover:inline-grid"));
 		$$(".toggle-play").forEach((input) => (input.checked = false));
 	},
@@ -74,8 +74,8 @@ const trackCard = {
 		const trackIndex = trackElement.querySelector(".track-card-index");
 		const trackTitle = trackElement.querySelector(".track-title");
 		if (trackIndex && trackTitle) {
-			trackIndex.classList.add("text-primary");
-			trackTitle.classList.add("text-primary");
+			trackIndex.classList.add("text-accent");
+			trackTitle.classList.add("text-accent");
 		}
 	},
 

@@ -5,7 +5,7 @@ import router from "../../main";
 const header = {
 	async render() {
 		return /* html */ ` 
-			<nav class="navbar justify-between items-center p-5" id="header">
+			<nav class="navbar justify-between items-center p-5 bg-base-200" id="header">
 				<label for="sidebar-toggle" class="drawer-button sm:inline-flex md:inline-flex hidden btn btn-circle btn-ghost text-sm hover:bg-transparent text-base-content/50 hover:text-base-content">
 					<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="current" viewBox="0 0 24 24" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
@@ -48,7 +48,7 @@ const header = {
 		if (swapTheme)
 			swapTheme.onchange = () => {
 				const document = $("html");
-				document.dataset.theme = swapTheme.checked ? "emerald" : "dracula";
+				document.dataset.theme = swapTheme.checked ? "light" : "dark";
 			};
 
 		const keywordInput = $("#keyword");
