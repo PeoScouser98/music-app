@@ -1,7 +1,7 @@
-import { $, $$, debounce } from "../utils/common";
-import { reRenderContent } from "../utils/handle-page";
-import genreSubPage from "../pages/sub-pages/genre";
 import instance from "../api/axios.config";
+import genreSubPage from "../pages/sub-pages/genre";
+import { $, debounce } from "../utils/common";
+import { reRenderContent } from "../utils/handle-page";
 import searchResultSubpage from "./sub-pages/search-result";
 
 const searchPage = {
@@ -11,6 +11,7 @@ const searchPage = {
         `;
 	},
 	handleEvents() {
+		// audioController.start();
 		const searchInput = $("#keyword");
 		if (searchInput) {
 			if (searchInput.value === "") {
