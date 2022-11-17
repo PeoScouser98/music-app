@@ -17,7 +17,9 @@ const trackCardDropdown = {
 		const toggleLikeBtn = /* html */ `
         <li>
             <label class="swap place-content-start w-full">
-                <input type="checkbox" class="dropdown-like-toggle" data-track="${track._id}" ${track.isLiked ? "checked" : ""}/>
+                <input type="checkbox" class="dropdown-like-toggle" data-track="${track._id}" ${
+			track.isLiked ? "checked" : ""
+		}/>
                 <span class="swap-on flex justify-start items-center gap-3"><span class="material-symbols-sharp md-20">favorite</span> Remove from library</span>
                 <span class="swap-off flex justify-start items-center gap-3"><span class="material-symbols-outlined md-20">favorite</span> Save to library</span>
             </label>
@@ -39,7 +41,9 @@ const trackCardDropdown = {
 		const toggleAddNextUpBtn = /* html */ `
 						<li >
                             <label class="swap place-content-start">
-                                <input type="checkbox" class="toggle-add-nextup" ${isExistedInQueue ? "" : "checked"} data-track="${track._id}">
+                                <input type="checkbox" class="toggle-add-nextup" 
+										${isExistedInQueue ? "" : "checked"} 
+										data-track="${track._id}">
                                 <span class="swap-off flex items-center gap-3"><span class="material-symbols-outlined md-20">remove</span> Remove from Next up</span>
                                 <span class="swap-on flex items-center gap-3"><span class="material-symbols-outlined md-20">queue_music</span> Add to Next up</span>
                             </label>
@@ -48,7 +52,9 @@ const trackCardDropdown = {
 		// Add playlist button
 		const addPlaylistLabels = /* html */ `
                         <li>
-                            <label for="${auth != null ? "add-playlist--modal" : "require-login-modal"}" class="add-playlist-label" data-track="${track._id}">
+                            <label for="${
+															auth != null ? "add-playlist--modal" : "require-login-modal"
+														}" class="add-playlist-label" data-track="${track._id}">
                                 <span class="material-symbols-outlined md-20">playlist_add</span> Add to Playlist
                             </label>
                         </li>`;
@@ -80,9 +86,7 @@ const trackCardDropdown = {
 						if (toggle.dataset.track == audio.dataset.current) toggleLike.checked = !toggleLike.checked;
 
 						if (toggle.checked === true) {
-							console.log(toggle.dataset.track);
-							const res = await updateTracksCollection({ track: toggle.dataset.track });
-							console.log(res);
+							await updateTracksCollection({ track: toggle.dataset.track });
 							toast("success", "Added to your library!");
 						} else {
 							await updateTracksCollection({ track: toggle.dataset.track, action: "unfollow" });
@@ -90,7 +94,14 @@ const trackCardDropdown = {
 						}
 
 						const currentRouter = router.current[0];
-						if (currentRouter.url.includes("playlist")) renderPageContent(playlistPage, currentRouter.data.id);
+
+						if (currentRouter.url.includes("liked-tracks")) {
+							const { tracks } = getTracksCollection();
+							const content = Array.isArray(tracks)
+								? tracks.map((track, index) => trackCard.render(track, index)).join("")
+								: "";
+							reRenderContent("#track-list", content);
+						}
 					}
 				}),
 		);
@@ -137,12 +148,16 @@ const trackCardDropdown = {
 					try {
 						const playlistId = btn.dataset.playlist;
 						const track = { track: btn.dataset.track };
-						console.log(playlistId);
 						const { tracks } = await Playlist.update(playlistId, track);
-						console.log("After removed :>> ", tracks);
 						toast("info", "Removed from playlist!");
+
 						if (router.current[0].url.includes("playlist")) {
-							const afterRemoved = Array.isArray(tracks) && tracks.length > 0 ? tracks.map((item, index) => trackCard.render(item, index)).join("") : "";
+							const afterRemoved =
+								Array.isArray(tracks) && tracks.length > 0
+									? tracks.map((item, index) => trackCard.render(item, index)).join("")
+									: "";
+							console.log(afterRemoved);
+							console.log("After removed", afterRemoved);
 							reRenderContent("#track-list", afterRemoved);
 						}
 					} catch (error) {

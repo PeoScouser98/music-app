@@ -13,7 +13,6 @@ import { debounce } from "../../utils/common";
 
 const audioController = {
 	async render(track) {
-		console.log("now playing track :>>", track);
 		const audio = $("#audio-player");
 		audio.src = track?.trackSrc;
 		audio.dataset.current = track?._id;
@@ -75,10 +74,10 @@ const audioController = {
 								<label class="swap swap-rotate group">
 									<input type="checkbox" id="toggle-play" ${audio.paused ? "" : "checked"}/>
 									<div class="swap-off bg-transparent text-4xl text-base-content group-hover:text-accent" id="play-btn">
-										<i class="bi bi-play-circle-fill"></i>
+										<i class="bi bi-play-circle"></i>
 									</div>
 									<div class="swap-on bg-transparent text-4xl text-base-content group-hover:text-accent" id="pause-btn">
-										<i class="bi bi-pause-circle-fill"></i>
+										<i class="bi bi-pause-circle"></i>
 									</div>
 								</label>
 								<!-- next button -->
@@ -212,11 +211,8 @@ const audioController = {
 	prevVolume: 100,
 	adjustVolume() {
 		const _this = audioController;
-
-		if (_this.prevVolume == 0 || _this.prevVolume == 1) _this.prevVolume = _this.audioVolume.value;
-
-		_this.volumeRange.style.width = `${(_this.prevVolume / _this.audioVolume.max) * 100}%`;
-		_this.audio.volume = _this.prevVolume / 100;
+		_this.volumeRange.style.width = `${(_this.audioVolume.value / _this.audioVolume.max) * 100}%`;
+		_this.audio.volume = _this.audioVolume.value / 100;
 
 		if (_this.audioVolume.value == 0) _this.volumeBtn.innerHTML = /* html */ `<i class="bi bi-volume-mute"></i>`;
 		else if (_this.audioVolume.value < 100) _this.volumeBtn.innerHTML = /* html */ `<i class="bi bi-volume-down"></i>`;
@@ -227,7 +223,7 @@ const audioController = {
 		isNotLiked ? toast("success", "Added to your library!") : toast("info", "Removed from your library!");
 		// re-render if needed
 		const currentRouter = router.current[0];
-		if (currentRouter.url.includes("playlist")) renderPageContent(playlistPage, currentRouter.data.id);
+		if (currentRouter.url.includes("liked-tracks")) renderPageContent(playlistPage);
 	},
 	handleEvents() {
 		const _this = audioController;
@@ -261,9 +257,9 @@ const audioController = {
 			_this.adjustVolume();
 		};
 
-		_this.volumeBtn.addEventListener.onclick = () => {
+		_this.volumeBtn.onclick = () => {
 			if (_this.audioVolume.value != 0) _this.audioVolume.value = 0;
-			else _this.audioVolume.value = _this.prevVolume;
+			else _this.audioVolume.value = +_this.prevVolume;
 			_this.adjustVolume();
 		};
 		//#endregion
