@@ -1,0 +1,5 @@
+const confirmDeletePlaylistModal = {
+	render() {
+		return;
+	},
+};

@@ -39,14 +39,6 @@ export const uploadTrack = async (formData) => {
 	}
 };
 
-export const addToPlaylist = async (playlistId, trackId) => {
-	try {
-		return await instance.patch(`/playlist/${playlistId}`, { track: trackId });
-	} catch (error) {
-		console.log(error);
-	}
-};
-
 export const addToNextUp = (track) => {
 	let nextUp = storage.get("nextUp");
 	if (nextUp) {

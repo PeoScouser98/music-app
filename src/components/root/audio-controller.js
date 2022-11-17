@@ -13,6 +13,7 @@ import { debounce } from "../../utils/common";
 
 const audioController = {
 	async render(track) {
+		console.log("now playing track :>>", track);
 		const audio = $("#audio-player");
 		audio.src = track?.trackSrc;
 		audio.dataset.current = track?._id;
@@ -31,8 +32,15 @@ const audioController = {
 					<div class="flex justify-start items-center gap-3 order-1 basis-1/4 sm:basis-1/2 md:basis-1/2">
 						<img src="${track?.thumbnail}" class="max-w-full h-16 sm:h-12 rounded-lg" />
 						<div class="max-w-full overflow-hidden flex flex-col gap-1">
-							<a href="/#/track/${track?._id}" class="text-base font-semibold w-full truncate hover:link" id="playing-track__name">${track?.title}</a>
-							${track?.artists?.map((artist) => /* html */ `<a href="/#/artist/${artist._id}" class="text-base-content" >${artist?.name}</a>`).join(", ")}
+							<a href="/#/track/${track?._id}" class="text-base font-semibold w-full truncate hover:link" id="playing-track__name">${
+			track?.title
+		}</a>
+							${track?.artists
+								?.map(
+									(artist) =>
+										/* html */ `<a href="/#/artist/${artist._id}" class="text-base-content" >${artist?.name}</a>`,
+								)
+								.join(", ")}
 						</div>
 					</div>
 						
@@ -45,7 +53,9 @@ const audioController = {
 							<span id="current-time">${timer(audio.currentTime)}</span>
 							<div class="range-container self-center">
 								<div class="range-progress" id="current-progress"></div>
-								<input type="range" min="0" class="my-range w-[-webkit-fill-available]" value="0" step="0.001" id="audio-player-progress" max="${track?.duration}"  />
+								<input type="range" min="0" class="my-range w-[-webkit-fill-available]" value="0" step="0.001" id="audio-player-progress" max="${
+									track?.duration
+								}"  />
 							</div>
 							<span id="track-duration">${!isNaN(track?.duration) ? timer(track?.duration) : timer(0)}</span>
 						</div>
@@ -65,10 +75,10 @@ const audioController = {
 								<label class="swap swap-rotate group">
 									<input type="checkbox" id="toggle-play" ${audio.paused ? "" : "checked"}/>
 									<div class="swap-off bg-transparent text-4xl text-base-content group-hover:text-accent" id="play-btn">
-										<i class="bi bi-play-circle"></i>
+										<i class="bi bi-play-circle-fill"></i>
 									</div>
 									<div class="swap-on bg-transparent text-4xl text-base-content group-hover:text-accent" id="pause-btn">
-										<i class="bi bi-pause-circle"></i>
+										<i class="bi bi-pause-circle-fill"></i>
 									</div>
 								</label>
 								<!-- next button -->
@@ -140,10 +150,12 @@ const audioController = {
 		this.unLikeTrackBtn = $("#unlike-track-btn");
 
 		this.currentInterval = 0;
-		this.isShuffle = false;
-		this.isLoop = false;
+		this.isShuffle;
+		this.isLoop;
 		this.nextUp = storage.get("nextUp");
-		this.currentTrackIndex = this.nextUp.indexOf(this.nextUp.find((track) => track._id === storage.get("nowPlaying")._id));
+		this.currentTrackIndex = this.nextUp.indexOf(
+			this.nextUp.find((track) => track._id === storage.get("nowPlaying")._id),
+		);
 	},
 	play() {
 		const _this = audioController;
@@ -187,7 +199,6 @@ const audioController = {
 
 		// save the current song
 		storage.set("nowPlaying", track);
-
 		// re-render if needed
 		if (location.href.includes("nextup")) await renderPageContent(nextUpPage);
 		// reset to the start
@@ -233,7 +244,7 @@ const audioController = {
 		_this.toggleLike.onchange = debounce(() => {
 			const track = _this.toggleLike.dataset.track;
 			_this.toggleLikeTrack(track, _this.toggleLike.checked);
-		}, 1000);
+		}, 500);
 
 		/* ::::::::::: Play track ::::::::::: */
 		//#region
@@ -263,16 +274,16 @@ const audioController = {
 		if (nextButton)
 			nextButton.onclick = () => {
 				let newIndex;
-				// if shuffle play is turned on -> create random track index
-				if (_this.isShuffle == true) newIndex = _this.currentTrackIndex;
-				// if shuffle play is turned off -> track's index will increase
-				else {
+				if (_this.isShuffle) {
+					_this.currentTrackIndex = Math.floor(Math.random() * _this.nextUp.length); // if shuffle play is turned on -> create random track index
+					newIndex = _this.currentTrackIndex;
+				} else {
+					// if shuffle play is turned off -> track's index will increase
 					_this.currentTrackIndex++;
-					if (_this.currentTrackIndex == _this.nextUp.length) _this.currentTrackIndex = 0;
+					if (_this.currentTrackIndex === _this.nextUp.length) _this.currentTrackIndex = 0;
 					newIndex = _this.currentTrackIndex;
 				}
 
-				console.log(newIndex);
 				_this.changeTrack(_this.nextUp[newIndex]);
 				trackCard.handleEvents();
 				// _this.togglePlay.checked = !_this.audio.paused
@@ -284,9 +295,11 @@ const audioController = {
 		const prevButton = $("#prev-btn");
 		if (prevButton)
 			prevButton.onclick = () => {
+				let newIndex;
+				if (_this.isShuffle == true) newIndex = _this.currentTrackIndex;
+
 				_this.currentTrackIndex--;
 				if (_this.currentTrackIndex == -1) _this.currentTrackIndex = _this.nextUp.length - 1;
-				let newIndex = _this.currentTrackIndex;
 
 				_this.changeTrack(_this.nextUp[newIndex]);
 				_this.togglePlay.checked = !_this.audio.paused;
@@ -310,8 +323,10 @@ const audioController = {
 			if (_this.shuffleToggle.checked) {
 				_this.isShuffle = true;
 				let newIndex = Math.floor(Math.random() * _this.nextUp.length);
-				while (_this.currentTrackIndex === newIndex) _this.currentTrackIndex = Math.floor(Math.random() * _this.nextUp.length);
-			}
+				while (_this.currentTrackIndex == newIndex) {
+					_this.currentTrackIndex = Math.floor(Math.random() * _this.nextUp.length);
+				}
+			} else _this.isShuffle = false;
 		};
 		//#endregion
 

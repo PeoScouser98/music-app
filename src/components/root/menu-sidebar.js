@@ -8,17 +8,14 @@ import createPlaylistModal from "../modals/create-playlist-modal";
 import toast from "../notification/toast";
 
 const asideMenu = {
-	async render() {
+	async render(userPlaylists) {
 		const auth = await getUser();
-		const _userPlaylists = auth != undefined ? getAll() : new Promise((resolve) => resolve([]));
-		const _tracksCollection = auth != undefined ? getTracksCollection() : new Promise((resolve) => resolve([]));
-		const [userPlaylists, tracksCollection] = await Promise.all([_userPlaylists, _tracksCollection]);
 		const userPlaylistsHTML =
 			userPlaylists !== undefined && Array.isArray(userPlaylists)
 				? userPlaylists
 						.map(
 							(list) => /* html */ `
-									<li class="menu-item">
+									<li class="menu-item" id="${list._id}">
 										<a href="/#/playlist/${list._id}">${list.title}</a>
 									</li>`,
 						)
@@ -30,7 +27,7 @@ const asideMenu = {
 				<div class="menu invisible-scroll p-5 overflow-y-auto w-80 bg-base-300 text-lg relative">
 					<!-- Sidebar content here -->
 					<a href="/#/" class="text-left inline-flex items-center">
-						<img src="./assets/img/logo.png" alt="" class="max-w-[16rem] h-28 object-center object-cover -translate-x-4" />
+						<img src="./img/logo.png" alt="" class="max-w-[16rem] h-28 object-center object-cover -translate-x-4" />
 					</a>
 					<form action="" class="sm:block md:block lg:hidden xl:hidden mb-10">
 						<div class="flex justify-start items-center px-5 border border-zinc-600 rounded-full ">
@@ -46,8 +43,8 @@ const asideMenu = {
 						<li class="menu-item">
 							${
 								auth != undefined
-									? /* html */ `<a href="/#/liked-tracks"><span class="material-symbols-outlined">favorite</span>${tracksCollection.title}</a> `
-									: /* html */ `<label for="require-login-modal"><span class="material-symbols-outlined">favorite</span>Liked tracks</label>`
+									? /* html */ `<a href="/#/liked-tracks"><span class="material-symbols-outlined">favorite</span>Liked Tracks</a> `
+									: /* html */ `<label for="require-login-modal"><span class="material-symbols-outlined">favorite</span>Liked Tracks</label>`
 							}
 							
 						</li>
@@ -60,12 +57,16 @@ const asideMenu = {
 							
 						</li>
 						<li class="menu-item">
-							<label for="${auth != undefined ? "upload-modal-toggle" : "require-login-modal"}" class="inline-grid grid-cols-[10%,90%]" id="upload-btn">
+							<label for="${
+								auth != undefined ? "upload-modal-toggle" : "require-login-modal"
+							}" class="inline-grid grid-cols-[10%,90%]" id="upload-btn">
 								<span class="material-symbols-outlined">cloud_upload</span> Upload
 							</label>
 						</li>
 						<li class="menu-item">
-							<label for="${auth != undefined ? "toggle-create-playlist--modal" : "require-login-modal"}" class="modal-button inline-grid grid-cols-[10%,90%]" id="create-playlist__btn">
+							<label for="${
+								auth != undefined ? "toggle-create-playlist--modal" : "require-login-modal"
+							}" class="modal-button inline-grid grid-cols-[10%,90%]" id="create-playlist__btn">
 								<i class="bi bi-plus-lg"></i> Create playlist
 							</label>
 						</li>

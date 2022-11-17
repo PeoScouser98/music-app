@@ -9,7 +9,6 @@ import artistSubPage from "../../pages/sub-pages/artist";
 const artistCard = {
 	render(artist) {
 		const auth = storage.get("auth");
-
 		const toggleFollowBtn = /* html */ `
             <label class="swap" ${!auth?.id ? 'for="require-login-modal"' : ""}>
                <input type="checkbox" class="toggle-follow-artist" ${artist.isFollowed ? "checked" : ""} data-id="${artist._id}" data-name="${artist.name}">
@@ -22,7 +21,7 @@ const artistCard = {
             </label>`;
 
 		return /* html */ `
-         <div class="relative overflow-hidden flex flex-col justify-between items-stretch gap-3 p-5 max-w-full max-h-[500px] bg-base-200 hover:bg-base-300 duration-300 rounded-box shadow-lg gradient-border hover:cursor-grab">
+         <div class="relative overflow-hidden flex flex-col justify-between items-stretch gap-3 p-5 max-w-xs max-h-[500px] bg-base-200 hover:bg-base-300 duration-300 rounded-box shadow-lg gradient-border hover:cursor-grab">
             <div class="relative group z-20 self-center">
                <div class="absolute top-0 right-0 left-0 bottom-0 w-full h-full rounded-full bg-black/50 flex justify-center items-center opacity-0 duration-300 group-hover:opacity-100">
                   <!-- toggle follow/unfollow -->

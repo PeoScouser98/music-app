@@ -4,10 +4,11 @@ import * as Track from "../../api/track";
 import router from "../../main";
 import toast from "../notification/toast";
 import { $, $$ } from "../../utils/common";
-import { renderPageContent } from "../../utils/handle-page";
+import { renderPageContent, reRenderContent } from "../../utils/handle-page";
 import playlistPage from "../../pages/playlist";
 import nextUpPage from "../../pages/nextup";
 import { getTracksCollection, updateTracksCollection } from "../../api/collection";
+import trackCard from "../cards/track-card";
 
 const trackCardDropdown = {
 	render(track) {
@@ -23,11 +24,11 @@ const trackCardDropdown = {
         </li>`;
 
 		// remove from playlist buttons
-		const playlistId = Array.isArray(router.current) ? router.current[0].data : "";
+		const playlistId = router.current[0].url.includes("playlist") ? router.current[0].data.id : null;
 		const removeFromPlaylistBtn =
 			playlistId !== null
 				? /* html */ `
-							<li data-playlist="${playlistId}" data-track="${track._id}">
+							<li data-playlist="${playlistId}" data-track="${track._id}" class="remove-from-playlist--btn">
 								<label><span class="material-symbols-outlined md-20">playlist_remove</span> Remove from Playlist</li></label>
 							<li>`
 				: "";
@@ -45,9 +46,9 @@ const trackCardDropdown = {
                         </li>`;
 
 		// Add playlist button
-		const addPlaylistBtn = /* html */ `
+		const addPlaylistLabels = /* html */ `
                         <li>
-                            <label for="${auth != null ? "add-playlist--modal" : "require-login-modal"}" class="add-playlist__btn" data-track="${track._id}">
+                            <label for="${auth != null ? "add-playlist--modal" : "require-login-modal"}" class="add-playlist-label" data-track="${track._id}">
                                 <span class="material-symbols-outlined md-20">playlist_add</span> Add to Playlist
                             </label>
                         </li>`;
@@ -57,7 +58,7 @@ const trackCardDropdown = {
 					<label tabindex="0" class="btn btn-ghost btn-circle hover:bg-transparent group-hover:text-base-content"><i class="bi bi-three-dots"></i></label>
 					<ul tabindex="0" class="dropdown-content menu bg-base-200 text-base-content/50 p-2 shadow rounded-xl w-64">
                         ${toggleLikeBtn}
-						${addPlaylistBtn}
+						${addPlaylistLabels}
                         ${removeFromPlaylistBtn}
 						${toggleAddNextUpBtn}
                         <li><a href="${track.downloadUrl}"><span class="material-symbols-outlined md-20">download</span> Download</a></li>
@@ -66,9 +67,7 @@ const trackCardDropdown = {
     `;
 	},
 	handleEvents() {
-		/* ::::::::::::::::::::::::::::::::::::::::::::: */
 		/* :::::::::: Toggle like/unlike track ::::::::: */
-		/* ::::::::::::::::::::::::::::::::::::::::::::: */
 		//#region
 		const likeToggleInput = $$(".dropdown-like-toggle");
 		const audio = $("#audio-player");
@@ -97,9 +96,7 @@ const trackCardDropdown = {
 		);
 		//#endregion
 
-		/* ::::::::::::::::::::::::::::::::::::::::::::: */
 		/* ::::::::::::::: Add to next up :::::::::::::: */
-		/* ::::::::::::::::::::::::::::::::::::::::::::: */
 		//#region
 		const addNextupTogglers = $$(".toggle-add-nextup");
 		addNextupTogglers.forEach((toggle) => {
@@ -117,27 +114,42 @@ const trackCardDropdown = {
 				}
 			};
 		});
-		// if (addNextUpBtns) {
-		//     addNextUpBtns.forEach(
-		//         (btn) =>
-		//         (btn.onclick = async () => {
-		//             const { track } = await Track.getOne(btn.dataset.track)
-		//             Track.addToNextUp(track);
-		//         }),
-		//     );
-		// }
 		//#endregion
 
-		/* ::::::::::::::::::::::::::::::::::::::::::::::::::::: */
-		/* ::::::::::::: Remove track from nextup :::::::::::::: */
-		/* ::::::::::::::::::::::::::::::::::::::::::::::::::::: */
+		/* ::::::::::::::::: Add to playlist :::::::::::::::::::: */
 		//#region
-		// const removeNextupBtns = $$(".remove-queue-btn")
-		// if (removeNextupBtns)
-		//     removeNextupBtns.forEach(btn => btn.onclick = () => {
-		//
-		//     })
+		const addPlaylistLabel = $$(".add-playlist-label");
+		const addPlaylistBtns = $$(".add-to-list--btn");
+		addPlaylistLabel.forEach((label) => {
+			if (label)
+				label.onclick = () =>
+					addPlaylistBtns.forEach((btn) => {
+						btn.dataset.track = label.dataset.track;
+					});
+		});
 		//#endregion
+
+		/* ::::::::::::::: Remove from playlist ::::::::::::::::::: */
+		const removeFromPlaylistBtns = $$(".remove-from-playlist--btn");
+		removeFromPlaylistBtns.forEach((btn) => {
+			if (btn)
+				btn.onclick = async () => {
+					try {
+						const playlistId = btn.dataset.playlist;
+						const track = { track: btn.dataset.track };
+						console.log(playlistId);
+						const { tracks } = await Playlist.update(playlistId, track);
+						console.log("After removed :>> ", tracks);
+						toast("info", "Removed from playlist!");
+						if (router.current[0].url.includes("playlist")) {
+							const afterRemoved = Array.isArray(tracks) && tracks.length > 0 ? tracks.map((item, index) => trackCard.render(item, index)).join("") : "";
+							reRenderContent("#track-list", afterRemoved);
+						}
+					} catch (error) {
+						console.warn(error);
+					}
+				};
+		});
 	},
 };
 export default trackCardDropdown;

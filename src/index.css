@@ -112,16 +112,11 @@
 	.tooltip {
 		@apply z-[100];
 	}
-	.tooltip-accent {
-		--tooltip-color: rgba(31, 178, 166, 1);
-	}
 
 	.btn {
 		@apply normal-case;
 	}
-	/* .btn-accent {
-		@apply bg-accent border-accent outline-accent hover:bg-teal-600 hover:border-teal-600 hover:outline-teal-600 text-zinc-900;
-	} */
+
 	.loader-sm {
 		@apply pointer-events-none rounded-full border-transparent border-t-accent animate-spin w-6 h-6  border-[3px];
 	}

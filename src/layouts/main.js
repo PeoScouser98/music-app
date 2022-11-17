@@ -7,17 +7,20 @@ import addPlaylistModal from "../components/modals/add-playlist-modal";
 import { getNowPlayingTrack } from "../api/track";
 import loginModal from "../components/notification/require-login-modal";
 import storage from "../utils/localstorage";
+import instance from "../api/axios.config";
 
 const mainLayout = {
 	async render() {
 		await uploadForm.defineProps();
+		const playlists = await instance.get("/playlist");
+
 		const _header = header.render();
 		const _audioController = audioController.render();
-		const _asideMenu = asideMenu.render();
-		const _addPlaylistModal = addPlaylistModal.render();
+		const _asideMenu = asideMenu.render(playlists);
+		const _addPlaylistModal = addPlaylistModal.render(playlists);
 		const _uploadForm = uploadForm.render();
-
-		const [html_header, html_audioController, html_asideMenu, html_addPlaylistModal, html_uploadform] = await Promise.all([_header, _audioController, _asideMenu, _addPlaylistModal, _uploadForm]);
+		const [html_header, html_audioController, html_asideMenu, html_addPlaylistModal, html_uploadform] =
+			await Promise.all([_header, _audioController, _asideMenu, _addPlaylistModal, _uploadForm]);
 		return /* html */ `
         	<div class="drawer drawer-mobile ">
 				<input id="sidebar-toggle" type="checkbox" class="drawer-toggle" />
@@ -45,6 +48,7 @@ const mainLayout = {
 		header.handleEvents();
 		asideMenu.handleEvents();
 		createPlaylistModal.handleEvents();
+		addPlaylistModal.handleEvents();
 		uploadForm.handleEvents();
 		audioController.start();
 

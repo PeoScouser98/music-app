@@ -1,6 +1,4 @@
-import audioController from "../components/root/audio-controller";
 import trackCard from "../components/cards/track-card";
-import { $ } from "../utils/common";
 import storage from "../utils/localstorage";
 
 const nextUpPage = {
@@ -8,7 +6,6 @@ const nextUpPage = {
 		const nextUp = storage.get("nextUp");
 		const currentTrack = storage.get("nowPlaying");
 		const inQueue = nextUp.filter((item) => item._id != currentTrack._id);
-		console.log(inQueue);
 		const inQueueHTML =
 			Array.isArray(inQueue) && inQueue.length > 0
 				? (await Promise.all(inQueue.map((item, index) => trackCard.render(item, index + 1)))).join("")
@@ -32,8 +29,6 @@ const nextUpPage = {
 	},
 
 	handleEvents() {
-		audioController.start();
-
 		trackCard.handleEvents();
 	},
 };

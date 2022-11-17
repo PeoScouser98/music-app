@@ -1,10 +1,11 @@
 import instance from "../../api/axios.config";
-import { $ } from "../../utils/common";
+import { $, $$ } from "../../utils/common";
 import storage from "../../utils/localstorage";
+import * as Playlist from "../../api/playlist";
+import toast from "../notification/toast";
 
 const addPlaylistModal = {
-	async render() {
-		const userPlaylists = await instance.get("/playlist");
+	async render(playlists) {
 		return /* html */ `
         <input type="checkbox" id="add-playlist--modal" class="modal-toggle" />
         <label for="add-playlist--modal" class="modal cursor-pointer">
@@ -12,38 +13,43 @@ const addPlaylistModal = {
                 <h3 class="text-2xl font-semibold text-center">Add to Playlist</h3>
                 <div class="divider before:bg-zinc-500 after:bg-zinc-500"></div>
                 <ul class="menu gap-1 scroll" id="user-playlist-items">
-				${
-					Array.isArray(userPlaylists)
-						? userPlaylists
-								.map((list) => {
-									if (list.title !== "Liked Tracks")
-										return /* html */ `
-								<li >
-									<a class="inline-flex justify-between items-center h-fit rounded-lg">
-										<span>${list.title}</span>
-										<button class="add-to-list--btn btn btn-ghost hover:btn-accent btn-sm normal-case" data-playlist="${list._id}">Add</button>
-									</a>
-								</li>`;
-								})
-								.join("")
-						: ""
-				}
+					${
+						Array.isArray(playlists)
+							? playlists
+									.map(
+										(list) => /* html */ `
+										<li>
+											<a class="inline-flex justify-between items-center h-fit rounded-lg">
+												<span>${list.title}</span>
+												<button class="add-to-list--btn btn btn-ghost hover:btn-accent btn-sm normal-case"
+														data-playlist="${list._id}">
+												Add</button>
+											</a>
+										</li>`,
+									)
+									.join("")
+							: ""
+					}
 				</ul>
             </label>
         </label>
         `;
 	},
 	async handleEvents() {
-		const auth = storage.get("auth");
-		if (auth != null) {
-			$("#app").innerHTML += addPlaylistModal.render();
-			const userPlaylist = await instance.get("/playlist");
-			$("#user-playlist-items").innerHTML = userPlaylist
-				.map((playlist) => {
-					return /* html */ `<li><a>${playlist.title}</a></li>`;
-				})
-				.join("");
-		}
+		const addToPlaylistBtns = $$(".add-to-list--btn");
+		addToPlaylistBtns.forEach((btn) => {
+			if (btn)
+				btn.onclick = async () => {
+					const playlistId = btn.dataset.playlist;
+					const { tracks } = await Playlist.getOne(playlistId);
+					if (tracks.find((item) => item._id === btn.dataset.track) != undefined) toast("info", "Track already existed in playlist");
+					else {
+						const track = { track: btn.dataset.track };
+						await Playlist.update(playlistId, track);
+						toast("success", "Added to playlist!");
+					}
+				};
+		});
 	},
 };
 
