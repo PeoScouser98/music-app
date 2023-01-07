@@ -1,15 +1,14 @@
-import { $ } from "../utils/common";
-import { register } from "../api/auth";
-import rules from "../utils/validate";
-import toast from "../components/notification/toast";
-import { toggleLoadingBtn } from "../components/loading/loading";
+import { $ } from "@/utils/common";
+import { register } from "@/api/auth";
+import rules from "@/utils/validate";
+import toast from "@/components/notification/toast";
+import { toggleLoadingBtn } from "@/components/loading/loading";
 const registerPage = {
 	render() {
 		return /* html */ `
 			<div class="bg-base-100 flex justify-center items-center min-h-screen">
 				<form action="" id="register__form" class="bg-base-200 glass text-base-content min-w-[768px] p-10">
 					<img src="./assets/img/logo.png" alt="" class="block sm:max-w-full max-w-sm mx-auto" />
-
 					<h1 class="text-center text-3xl mb-14 heading-text max-w-[50%]"><span class="bg-transparent">Signup</span></h1>
 					<div class="grid grid-cols-2 gap-x-10 sm:grid-cols-1">
 						<div class="form-control gap-1 mb-5">

@@ -1,7 +1,7 @@
-import { getResetPassword } from "../api/auth";
-import { $ } from "../utils/common";
-import rules from "../utils/validate";
-import toast from "../components/notification/toast";
+import { getResetPassword } from "@/api/auth";
+import { $ } from "@/utils/common";
+import rules from "@/utils/validate";
+import toast from "@/components/notification/toast";
 
 const forgotPasswordPage = {
 	render() {

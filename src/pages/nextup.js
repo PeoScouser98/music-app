@@ -1,5 +1,5 @@
-import trackCard from "../components/cards/track-card";
-import storage from "../utils/localstorage";
+import trackCard from "@/components/cards/track-card";
+import storage from "@/utils/localstorage";
 
 const nextUpPage = {
 	async render() {

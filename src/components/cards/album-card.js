@@ -1,9 +1,9 @@
-import storage from "../../utils/localstorage";
-import { $$ } from "../../utils/common";
-import { updateAlbumsCollection } from "../../api/collection";
+import storage from "@/utils/localstorage";
+import { $$ } from "@/utils/common";
+import { updateAlbumsCollection } from "@/api/collection";
 import toast from "../notification/toast";
-import { reRenderContent } from "../../utils/handle-page";
-import albumSubPage from "../../pages/sub-pages/album";
+import { reRenderContent } from "@/utils/handle-page";
+import albumSubPage from "@/pages/sub-pages/album";
 const albumCard = {
 	render(album) {
 		const auth = storage.get("auth");

@@ -1,7 +1,7 @@
-import instance from "../api/axios.config";
-import genreSubPage from "../pages/sub-pages/genre";
-import { $, debounce } from "../utils/common";
-import { reRenderContent } from "../utils/handle-page";
+import instance from "@/api/axios.config";
+import genreSubPage from "@/pages/sub-pages/genre";
+import { $, debounce } from "@/utils/common";
+import { reRenderContent } from "@/utils/handle-page";
 import searchResultSubpage from "./sub-pages/search-result";
 
 const searchPage = {

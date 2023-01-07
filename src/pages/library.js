@@ -1,10 +1,10 @@
-import { $$ } from "../utils/common";
+import { $$ } from "@/utils/common";
 import { reRenderContent } from "../utils/handle-page";
 // import { toggleLoadingPageContent } from "../utils/loading";
 import playlistSubPage from "./sub-pages/playlist";
 import tracksSubpage from "./sub-pages/track";
 import artistSubPage from "./sub-pages/artist";
-import artistCard from "../components/cards/artist-card";
+import artistCard from "@/components/cards/artist-card";
 import albumSubPage from "./sub-pages/album";
 import { getArtistsCollection } from "../api/collection";
 // import

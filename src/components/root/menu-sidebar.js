@@ -57,9 +57,7 @@ const asideMenu = {
 							
 						</li>
 						<li class="menu-item">
-							<label for="${
-								auth != undefined ? "upload-modal-toggle" : "require-login-modal"
-							}" class="inline-grid grid-cols-[10%,90%]" id="upload-btn">
+							<label for="${auth != undefined ? "upload-modal-toggle" : "require-login-modal"}" class="inline-grid grid-cols-[10%,90%]" id="upload-btn">
 								<span class="material-symbols-outlined">cloud_upload</span> Upload
 							</label>
 						</li>

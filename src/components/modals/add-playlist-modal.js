@@ -1,7 +1,5 @@
-import instance from "../../api/axios.config";
-import { $, $$ } from "../../utils/common";
-import storage from "../../utils/localstorage";
-import * as Playlist from "../../api/playlist";
+import { $$ } from "@/utils/common";
+import * as Playlist from "@/api/playlist";
 import toast from "../notification/toast";
 
 const addPlaylistModal = {
@@ -42,7 +40,8 @@ const addPlaylistModal = {
 				btn.onclick = async () => {
 					const playlistId = btn.dataset.playlist;
 					const { tracks } = await Playlist.getOne(playlistId);
-					if (tracks.find((item) => item._id === btn.dataset.track) != undefined) toast("info", "Track already existed in playlist");
+					if (tracks.find((item) => item._id === btn.dataset.track) != undefined)
+						toast("info", "Track already existed in playlist");
 					else {
 						const track = { track: btn.dataset.track };
 						await Playlist.update(playlistId, track);

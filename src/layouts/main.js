@@ -1,13 +1,13 @@
-import header from "../components/root/header";
-import asideMenu from "../components/root/menu-sidebar";
-import createPlaylistModal from "../components/modals/create-playlist-modal";
-import uploadForm from "../components/modals/upload-modal";
-import audioController from "../components/root/audio-controller";
-import addPlaylistModal from "../components/modals/add-playlist-modal";
-import { getNowPlayingTrack } from "../api/track";
-import loginModal from "../components/notification/require-login-modal";
-import storage from "../utils/localstorage";
-import instance from "../api/axios.config";
+import header from "@/components/root/header";
+import asideMenu from "@/components/root/menu-sidebar";
+import createPlaylistModal from "@/components/modals/create-playlist-modal";
+import uploadForm from "@/components/modals/upload-modal";
+import audioController from "@/components/root/audio-controller";
+import addPlaylistModal from "@/components/modals/add-playlist-modal";
+import { getNowPlayingTrack } from "@/api/track";
+import loginModal from "@/components/notification/require-login-modal";
+import storage from "@/utils/localstorage";
+import instance from "@/api/axios.config";
 
 const mainLayout = {
 	async render() {

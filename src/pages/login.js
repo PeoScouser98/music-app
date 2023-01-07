@@ -1,30 +1,30 @@
-import { $ } from "../utils/common";
-import rules from "../utils/validate";
-import { login } from "../api/auth";
-import toast from "../components/notification/toast";
-import storage from "../utils/localstorage";
-import router from "../main";
+import { $ } from "@/utils/common";
+import rules from "@/utils/validate";
+import { login } from "@/api/auth";
+import toast from "@/components/notification/toast";
+import storage from "@/utils/localstorage";
+import router from "@/main";
 
 const loginPage = {
 	render() {
 		return /* html */ `
 			<div class="min-h-screen w-full flex justify-center items-center gap-8 text-base-content flex-grow bg-base-100">
 				<a href="/#/" class="fixed top-5 left-5 z-[100] text-base-content hover:text-base-content"><i class="bi bi-arrow-left-short"></i> Back to dashboard</a>
-				<div class="w-full h-screen hidden xl:flex xxl:flex flex-col justify-center items-start fixed top-0 right-0 left-0 bg-[url('../../assets/img/login-bg.jpg')] bg-center bg-cover bg-no-repeat">
+				<div class="w-full h-screen hidden xl:flex xxl:flex flex-col justify-center items-start fixed top-0 right-0 left-0 bg-[url('./img/login-bg.jpg')] bg-center bg-cover bg-no-repeat">
 				</div>
 				<div class="flex justify-center items-center gap-16 relative z-10">
 					<div class="hidden xl:block xxl:block">
-						<h1 class="text-7xl font-bold text-base-content align middle leading-[84px] mb-16">Millions of songs<br> Free on Bass Station</h1>
+						<h1 class="text-7xl font-bold text-white align middle leading-[84px] mb-16">Millions of songs<br> Free on Bass Station</h1>
 						<a href="/#/" class="btn btn-outline btn-lg">Get Started</a>
 					</div>
-					<div class="min-w-[480px] max-w-full glass sm:p-5 md:p-5 lg:p-8 xl:p-6 xxl:p-10 flex flex-col justify-center items-center gap-6 h-fit rounded-box sm:rounded-none sm:min-h-screen sm:w-screen">
-						<img src="./assets/img/logo.png" alt="" class="max-w-full max-h-[140px] xxl:max-h-[180px] object-cover object-center saturate-100" />
+					<div class="min-w-[480px] max-w-full bg-base-200 sm:p-5 md:p-5 lg:p-8 xl:p-6 xxl:p-10 flex flex-col justify-center items-center gap-6 h-fit rounded-box sm:rounded-none sm:min-h-screen sm:w-screen">
+						<img src="./img/logo.png" alt="" class="max-w-full max-h-[140px] xxl:max-h-[180px] object-cover object-center saturate-100" />
 						<div class="flex flex-col gap-2 w-full">
-							<a href="" class="btn bg-[#1976D2] hover:bg-[#0F6CC8] hover:border-[#1976D2] border-[#1976D2] text-base-content btn-block gap-1"><img src="../../assets/img/facebook.svg" alt=""> Sign in with Facebook account</a>
-							<a href="" class="btn text-base-content btn-block gap-2"><img src="../../assets/img/google.svg" alt=""> Sign in with Google account</a>
+							<a href="" class="btn bg-[#1976D2] hover:bg-[#0F6CC8] hover:border-[#1976D2] border-[#1976D2] text-base-content btn-block gap-1"><img src="./img/facebook.svg" alt=""> Sign in with Facebook account</a>
+							<a href="" class="btn text-base-content btn-block gap-2"><img src="../img/google.svg" alt=""> Sign in with Google account</a>
 						</div>
 							<div class="divider">OR</div>
-						<form action="" id="login__form" class="min-w-full">
+						<form action="" id="login__form" class="min-w-full text-white">
 							<div class="form-control gap-1 mb-5">
 								<label for="" class="text-base-content font-medium">Email</label>
 								<input type="email" name="email" data-name="Email" class="input text-base-content" placeholder="example@email.com"/>

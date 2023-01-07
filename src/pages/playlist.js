@@ -5,8 +5,8 @@ import header from "../components/root/header";
 import storage from "../utils/localstorage";
 import { getTracksCollection } from "../api/collection";
 import { $ } from "../utils/common";
-import editPlaylistModal from "../components/modals/edit-playlist-modal";
-import playlistActionDropdown from "../components/dropdown/playlist-actions";
+import editPlaylistModal from "@/components/modals/edit-playlist-modal";
+import playlistActionDropdown from "@/components/dropdown/playlist-actions";
 import router from "../main";
 
 const playlistPage = {

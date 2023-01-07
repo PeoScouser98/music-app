@@ -1,17 +1,18 @@
-import instance from "../api/axios.config";
-import { $ } from "../utils/common";
-import albumCard from "../components/cards/album-card";
-import trackCard from "../components/cards/track-card";
-import audioController from "../components/root/audio-controller";
-import { getTracksCollection } from "../api/collection";
-import { injectThemes } from "daisyui/src/colors/functions";
+import instance from "@/api/axios.config";
+import { getTracksCollection } from "@/api/collection";
+import albumCard from "@/components/cards/album-card";
+import trackCard from "@/components/cards/track-card";
+import audioController from "@/components/root/audio-controller";
+// import { injectThemes } from "daisyui/src/colors/functions";
 
 const artistPage = {
 	async render(id) {
 		const { artist, tracks, albums, followers } = await instance.get(`/artist/${id}`);
+
 		artist.wallpaper = artist.wallpaper || "../../assets/img/default-artist-wallpaper.png";
 		const tracksCollection = await getTracksCollection();
-		tracks.forEach((track) => (track.isLiked = tracksCollection.tracks.find((item) => item._id === track._id) !== undefined));
+		// tracks.forEach((track) => (track?.isLiked = tracksCollection?.tracks?.find((item) => item._id === track?._id) !== undefined));
+
 		return /* html */ `
 			<div class="flex flex-col gap-10 overflow-y-auto h-full scroll px-8 py-8 sm:px-4" id="page-content">
 				<!-- banner -->
@@ -31,12 +32,14 @@ const artistPage = {
 				<div class="flex flex-col gap-20 py-10">
 					<section>
 						<h1 class="text-2xl font-semibold mb-3 text-white">Popular</h1>
-						<div>${tracks.map((item, index) => trackCard.render(item, index)).join("")}</div>
+						<div>${tracks?.map((item, index) => trackCard.render(item, index)).join("")}</div>
 					</section>
 
 					<section>
 						<h1 class="text-2xl font-semibold mb-3 text-white">Albums of ${artist.name}</h1>
-						<div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-x-5 gap-y-10">${albums.map((item) => albumCard.render(item)).join("")}</div>
+						<div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-x-5 gap-y-10">${albums
+							.map((item) => albumCard.render(item))
+							.join("")}</div>
 					</section>
 				</div>
 			</div>
@@ -44,7 +47,6 @@ const artistPage = {
 	},
 	handleEvents() {
 		audioController.start();
-
 		trackCard.handleEvents();
 	},
 };

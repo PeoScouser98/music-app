@@ -1,7 +1,7 @@
-import { $ } from "../utils/common";
-import rules from "../utils/validate";
-import instance from "../api/axios.config";
-import toast from "../components/notification/toast";
+import { $ } from "@/utils/common";
+import rules from "@/utils/validate";
+import instance from "@/api/axios.config";
+import toast from "@/components/notification/toast";
 
 const resetPasswordPage = {
 	render() {

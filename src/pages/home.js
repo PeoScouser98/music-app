@@ -1,16 +1,15 @@
-import { $ } from "../utils/common";
-import audioController from "../components/root/audio-controller";
+import audioController from "@/components/root/audio-controller";
 
-import trackCard from "../components/cards/track-card";
-import instance from "../api/axios.config";
-import albumCard from "../components/cards/album-card";
-import artistCard from "../components/cards/artist-card";
+import instance from "@/api/axios.config";
+import albumCard from "@/components/cards/album-card";
+import artistCard from "@/components/cards/artist-card";
+import trackCard from "@/components/cards/track-card";
 
+import storage from "@/utils/localstorage";
 import Swiper, { Navigation, Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import storage from "../utils/localstorage";
 import { getAlbumsCollection, getArtistsCollection, getTracksCollection } from "../api/collection";
 
 const homePage = {
@@ -23,17 +22,27 @@ const homePage = {
 		const _tracksCollection = getTracksCollection();
 		const _artistCollection = getArtistsCollection();
 		const _albumsCollection = getAlbumsCollection();
-		const [tracks, albums, artists, tracksCollection, artistsCollection, albumsCollection] = await Promise.all([_tracks, _albums, _artists, _tracksCollection, _artistCollection, _albumsCollection]);
+		const [tracks, albums, artists, tracksCollection, artistsCollection, albumsCollection] = await Promise.all([
+			_tracks,
+			_albums,
+			_artists,
+			_tracksCollection,
+			_artistCollection,
+			_albumsCollection,
+		]);
 		tracks.forEach((track) => {
-			if (tracksCollection?.tracks && Array.isArray(tracksCollection?.tracks)) track.isLiked = tracksCollection.tracks.find((item) => item._id === track._id) != undefined;
+			if (tracksCollection?.tracks && Array.isArray(tracksCollection?.tracks))
+				track.isLiked = tracksCollection.tracks.find((item) => item._id === track._id) != undefined;
 			else track.isLiked = false;
 		});
 		artists.forEach((artist) => {
-			if (artistsCollection && Array.isArray(artistsCollection)) artist.isFollowed = artistsCollection.find((item) => item._id === artist._id) !== undefined;
+			if (artistsCollection && Array.isArray(artistsCollection))
+				artist.isFollowed = artistsCollection.find((item) => item._id === artist._id) !== undefined;
 			else artist.isFollowed = false;
 		});
 		albums.forEach((album) => {
-			if (albumsCollection && Array.isArray(albumsCollection)) album.isLiked = albumsCollection.find((item) => item._id === album._id) !== undefined;
+			if (albumsCollection && Array.isArray(albumsCollection))
+				album.isLiked = albumsCollection.find((item) => item._id === album._id) !== undefined;
 			else album.isLiked = false;
 		});
 		return /* html */ `
@@ -41,7 +50,9 @@ const homePage = {
 				<section class="relative">
 					<div class="relative z-10">
 						<h1 class="text-2xl sm:text-xl font-semibold mb-5 text-base-content">Most Popular</h1>
-						<div class="flex flex-col sm:gap-3">${Array.isArray(tracks) ? tracks.map((item, index) => trackCard.render(item, index)).join("") : ""}</div>
+						<div class="flex flex-col sm:gap-3">${
+							Array.isArray(tracks) ? tracks.map((item, index) => trackCard.render(item, index)).join("") : ""
+						}</div>
 						<a class="text-right font-medium text-base-content block mt-5 hover:link">See more</a>
 					</div>
 				</section>
@@ -49,7 +60,13 @@ const homePage = {
 					<h1 class="text-2xl  sm:text-xl font-semibold mb-5 text-base-content">Artists you also like</h1>
 					<div class="swiper artist-slider">
 						<div class="swiper-wrapper pb-10 container">
-							${Array.isArray(artists) ? artists.map((item) => /* html */ `<div class="swiper-slide">${artistCard.render(item)}</div>`).join("") : ""}
+							${
+								Array.isArray(artists)
+									? artists
+											.map((item) => /* html */ `<div class="swiper-slide">${artistCard.render(item)}</div>`)
+											.join("")
+									: ""
+							}
 						</div>
 						<div class="swiper-button-next right-5"><i class="bi bi-arrow-right-short"></i></div>
 						<div class="swiper-button-prev left-4"><i class="bi bi-arrow-left-short"></i></div>
