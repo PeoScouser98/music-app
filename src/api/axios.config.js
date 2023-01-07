@@ -1,15 +1,17 @@
 import axios from "axios";
 import storage from "../utils/localstorage";
 import { refreshToken } from "./auth";
-import "dotenv/config";
+
 // config axios
 const instance = axios.create({
 	baseURL: import.meta.env.VITE_BASE_URL,
+	// baseURL: "https://music-app-api-three.vercel.app/api/track",
 	headers: { "Content-Type": "application/json" },
 });
 /* :::::::::::::: Xử  trước khi gửi request xuống server :::::::::::::: */
 instance.interceptors.request.use(
 	(config) => {
+		console.log(import.meta.env.VITE_BASE_URL);
 		/* Bỏ qua check access token với các routes nay */
 		const skippingCheckTokenRoutes = ["/login", "/register", "/refresh-token", "/forgot-password", "/reset-password"];
 		if (skippingCheckTokenRoutes.indexOf(config.url) >= 0) return config;

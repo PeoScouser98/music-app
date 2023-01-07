@@ -1,0 +1,4 @@
+click (button next up)
+click (teen bai hat)
+quay lai (prev)
+=> loi

@@ -1,5 +1,4 @@
-import { getArtistsCollection } from "../../api/collection";
-import artistCard from "../../components/cards/artist-card";
+import artistCard from "@/components/cards/artist-card";
 
 const artistSubPage = {
 	async render(artistsList) {

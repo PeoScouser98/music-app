@@ -1,10 +1,10 @@
-import albumCard from "../../components/cards/album-card";
-import artistCard from "../../components/cards/artist-card";
-import playlistCard from "../../components/cards/playlist-card";
-import trackCard from "../../components/cards/track-card";
-import notFoundMessage from "../../components/notification/empty-message";
-import { $$ } from "../../utils/common";
-import { reRenderContent } from "../../utils/handle-page";
+import albumCard from "@/components/cards/album-card";
+import artistCard from "@/components/cards/artist-card";
+import playlistCard from "@/components/cards/playlist-card";
+import trackCard from "@/components/cards/track-card";
+import notFoundMessage from "@/components/notification/empty-message";
+import { $$ } from "@/utils/common";
+import { reRenderContent } from "@/utils/handle-page";
 const searchResultSubpage = {
 	render(data) {
 		const { tracks, playlists, artists, albums } = data;

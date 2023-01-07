@@ -1,5 +1,5 @@
-import { getAlbumsCollection } from "../../api/collection";
-import albumCard from "../../components/cards/album-card";
+import { getAlbumsCollection } from "@/api/collection";
+import albumCard from "@/components/cards/album-card";
 
 const albumSubPage = {
 	async render() {

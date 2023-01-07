@@ -1,6 +1,6 @@
-import { $ } from "../../utils/common";
+import { $ } from "@/utils/common";
 import accountDropdown from "../dropdown/account-dropdown";
-import router from "../../main";
+import router from "@/main";
 
 const header = {
 	async render() {
