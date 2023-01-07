@@ -10,22 +10,25 @@ import { $ } from "./utils/common";
 import mainLayout from "./layouts/main";
 
 // import pages
-import homePage from "./pages/home";
-import loginPage from "./pages/login";
-import registerPage from "./pages/register";
-import forgotPasswordPage from "./pages/forgot-password";
-import resetPasswordPage from "./pages/reset-password";
-import artistPage from "./pages/artist";
-import nextUpPage from "./pages/nextup";
-import albumPage from "./pages/album";
-import playlistPage from "./pages/playlist";
+import HomePage from "./pages/home";
+import LoginPage from "./pages/login";
+import RegisterPage from "./pages/register";
+import ForgotPasswordPage from "./pages/forgot-password";
+import ResetPasswordPage from "./pages/reset-password";
+import ArtistPage from "./pages/artist";
+import NextUpPage from "./pages/nextup";
+import AlbumPage from "./pages/album";
+import PlaylistPage from "./pages/playlist";
 import storage from "./utils/localstorage";
-import libraryPage from "./pages/library";
-import notFoundPage from "./pages/404";
-import searchPage from "./pages/search";
+import LibraryPage from "./pages/library";
+import NotFoundPage from "./pages/404";
+import SearchPage from "./pages/search";
+import loadingPage from "./pages/loading";
+import store from "./redux/store";
 
 const router = new Navigo("/", { hash: true });
 
+console.log(store);
 document.addEventListener("DOMContentLoaded", async () => {
 	await render(mainLayout);
 
@@ -33,6 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		before: (done) => {
 			const nextUp = storage.get("nextUp");
 			if (!nextUp) storage.set("nextUp", []);
+			renderPageContent(loadingPage);
 			done();
 		},
 	});
@@ -40,52 +44,52 @@ document.addEventListener("DOMContentLoaded", async () => {
 	router.on({
 		"/": async () => {
 			await render(mainLayout);
-			renderPageContent(homePage);
+			renderPageContent(HomePage);
 		},
 		"/home": () => {
-			renderPageContent(homePage);
+			renderPageContent(HomePage);
 		},
 		"/login": () => {
-			render(loginPage);
+			render(LoginPage);
 		},
 		"/register": () => {
-			render(registerPage);
+			render(RegisterPage);
 		},
 		"/forgot-password": () => {
-			render(forgotPasswordPage);
+			render(ForgotPasswordPage);
 		},
 		"/reset-password": () => {
-			render(resetPasswordPage);
+			render(ResetPasswordPage);
 		},
 		"/library": () => {
-			renderPageContent(libraryPage);
+			renderPageContent(LibraryPage);
 		},
 		"/artist/:id": ({ data }) => {
 			const { id } = data;
-			renderPageContent(artistPage, id);
+			renderPageContent(ArtistPage, id);
 		},
 		"album/:id": ({ data }) => {
 			const { id } = data;
-			renderPageContent(albumPage, id);
+			renderPageContent(AlbumPage, id);
 		},
 		"/nextup": () => {
-			renderPageContent(nextUpPage);
+			renderPageContent(NextUpPage);
 		},
 		"/liked-tracks": () => {
-			renderPageContent(playlistPage);
+			renderPageContent(PlaylistPage);
 		},
 		"/playlist/:id": ({ data }) => {
 			const { id } = data;
-			renderPageContent(playlistPage, id);
+			renderPageContent(PlaylistPage, id);
 		},
 		"/search": () => {
-			renderPageContent(searchPage);
+			renderPageContent(SearchPage);
 		},
 	});
 
 	router.notFound(
 		() => {
-			render(notFoundPage);
+			render(NotFoundPage);
 		},
 		{
 			leave: (done) => {

@@ -56,13 +56,17 @@ export const addToNextUp = (track) => {
 };
 
 export const getNowPlayingTrack = async (nextUp) => {
+	console.log(nextUp);
 	if (nextUp && Array.isArray(nextUp) && nextUp.length == 0) {
 		const [track] = await instance.get("/track");
 		storage.set("nowPlaying", track);
 		storage.set("nextUp", [track]);
+		console.log(track);
 		audioController.loadCurrentTrack(track);
 	} else {
 		const currentTrack = storage.get("nowPlaying");
+
+		console.log(currentTrack);
 		audioController.loadCurrentTrack(currentTrack);
 	}
 };

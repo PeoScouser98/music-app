@@ -1,14 +1,13 @@
-import storage from "../../utils/localstorage";
+import { getTracksCollection, updateTracksCollection } from "../../api/collection";
 import * as Playlist from "../../api/playlist";
 import * as Track from "../../api/track";
 import router from "../../main";
-import toast from "../notification/toast";
+import nextUpPage from "../../pages/nextup";
 import { $, $$ } from "../../utils/common";
 import { renderPageContent, reRenderContent } from "../../utils/handle-page";
-import playlistPage from "../../pages/playlist";
-import nextUpPage from "../../pages/nextup";
-import { getTracksCollection, updateTracksCollection } from "../../api/collection";
+import storage from "../../utils/localstorage";
 import trackCard from "../cards/track-card";
+import toast from "../notification/toast";
 
 const trackCardDropdown = {
 	render(track) {

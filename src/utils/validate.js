@@ -6,17 +6,8 @@ const validation = {
 		return formCtrl.dataset.name;
 	},
 	showMessage(formCtrl, message, style) {
-		const alert = {
-			error: "input-error",
-			success: "input-success",
-			warning: "input-warning",
-		};
 		const successMessage = formCtrl.parentElement.querySelector(".error-message");
 		successMessage.innerHTML = message;
-		formCtrl.classList.add(alert[style]);
-		for (const style in alert) {
-			formCtrl.classList.remove(style);
-		}
 	},
 	areRequired(...formControls) {
 		let isntError = true;
@@ -24,28 +15,22 @@ const validation = {
 			if (formCtrl.value.trim() != "") this.showMessage(formCtrl, null, "success");
 			else {
 				isntError = false;
-				this.showMessage(formCtrl, `${getFieldName(formCtrl)} is required`, "error");
+				this.showMessage(formCtrl, `${this.getFieldName(formCtrl)} is required`, "error");
 			}
 			formCtrl.oninput = () => {
 				if (formCtrl.value.trim() != "") this.showMessage(formCtrl, null, "success");
 				else {
 					isntError = false;
-					this.showMessage(formCtrl, `${getFieldName(formCtrl)} is required`, "error");
+					this.showMessage(formCtrl, `${this.getFieldName(formCtrl)} is required`, "error");
 				}
 			};
-			formCtrl.onblur = () => {
-				if (formCtrl.value.trim() != "") this.showMessage(formCtrl, null, "success");
-				else {
-					isntError = false;
-					this.showMessage(formCtrl, `${getFieldName(formCtrl)} is required`, "error");
-				}
-			};
+
 			formCtrl.onchange = () => {
 				if (formCtrl.value.trim() != "") {
 					this.showMessage(formCtrl, null, "success");
 				} else {
 					isntError = false;
-					this.showMessage(formCtrl, `${getFieldName(formCtrl)} is required`, "error");
+					this.showMessage(formCtrl, `${this.showMessage(formCtrl)} is required`, "error");
 				}
 			};
 		});
@@ -75,11 +60,7 @@ const validation = {
 				? this.showMessage(formCtrl1, null)
 				: this.showMessage(formCtrl1, `${getFieldName(formCtrl1)} is not matching !`, "error");
 		};
-		formCtrl1.onblur = () => {
-			formCtrl1.value == formCtrl2.value
-				? this.showMessage(formCtrl1, null)
-				: this.showMessage(formCtrl1, `${getFieldName(formCtrl1)} is not matching !`, "error");
-		};
+
 		return formCtrl1.value == formCtrl2.value;
 	},
 
@@ -89,11 +70,7 @@ const validation = {
 				? this.showMessage(formCtrl, null, "success")
 				: this.showMessage(formCtrl, `${getFieldName(formCtrl)} must have ${minLength} characters`, "error");
 		};
-		formCtrl.onblur = () => {
-			formCtrl.value.length >= minLength
-				? this.showMessage(formCtrl, null, "success")
-				: this.showMessage(formCtrl, `${getFieldName(formCtrl)} must have ${minLength} characters`, "error");
-		};
+
 		return formCtrl.value.length >= minLength;
 	},
 
@@ -103,11 +80,7 @@ const validation = {
 				? this.showMessage(formCtrl, null, "success")
 				: this.showMessage(formCtrl, `${getFieldName(formCtrl)} must have ${minLength} characters`, "error");
 		};
-		formCtrl.onblur = () => {
-			formCtrl.value.length <= minLength
-				? this.showMessage(formCtrl, null, "success")
-				: this.showMessage(formCtrl, `${getFieldName(formCtrl)} must have ${minLength} characters`, "error");
-		};
+
 		return formCtrl.value.length <= minLength;
 	},
 
@@ -117,11 +90,7 @@ const validation = {
 				? this.showMessage(formCtrl, null, "success")
 				: this.showMessage(formCtrl, `${getFieldName(formCtrl)} is invalid`, "error");
 		};
-		formCtrl.onblur = () => {
-			formCtrl.value == +formCtrl.value && formCtrl.value.length == 10
-				? this.showMessage(formCtrl, null, "success")
-				: this.showMessage(formCtrl, `${getFieldName(formCtrl)} is invalid`, "error");
-		};
+
 		return formCtrl.value == +formCtrl.value && formCtrl.value.length == 10;
 	},
 

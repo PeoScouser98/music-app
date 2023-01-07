@@ -187,7 +187,7 @@ const audioController = {
 			_this.audio.src = track.trackSrc;
 			_this.audio.dataset.current = track._id;
 			_this.audio.load();
-			const thumbnail = track?.album?.image || track?.artists[0]?.avatar;
+			const thumbnail = track?.album?.image || (Array.isArray(track.artists) && track.artists[0].avatar);
 			audioContainer.innerHTML = await _this.render({ thumbnail, ...track });
 			_this.start();
 		}

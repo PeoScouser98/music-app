@@ -1,13 +1,13 @@
 import * as Playlist from "../api/playlist";
 import audioController from "../components/root/audio-controller";
-import trackCard from "../components/cards/track-card";
-import header from "../components/root/header";
-import storage from "../utils/localstorage";
-import { getTracksCollection } from "../api/collection";
-import { $ } from "../utils/common";
+import trackCard from "@/components/cards/track-card";
+import header from "@/components/root/header";
+import storage from "@/utils/localstorage";
+import { getTracksCollection } from "@/api/collection";
+import { $ } from "@/utils/common";
 import editPlaylistModal from "@/components/modals/edit-playlist-modal";
 import playlistActionDropdown from "@/components/dropdown/playlist-actions";
-import router from "../main";
+import router from "@/main";
 
 const playlistPage = {
 	async render(id) {
