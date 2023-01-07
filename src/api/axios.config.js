@@ -1,10 +1,10 @@
 import axios from "axios";
 import storage from "../utils/localstorage";
 import { refreshToken } from "./auth";
-
+import "dotenv/config";
 // config axios
 const instance = axios.create({
-	baseURL: "http://localhost:3001/api",
+	baseURL: import.meta.env.VITE_BASE_URL,
 	headers: { "Content-Type": "application/json" },
 });
 /* :::::::::::::: Xử  trước khi gửi request xuống server :::::::::::::: */
