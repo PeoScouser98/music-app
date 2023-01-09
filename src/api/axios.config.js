@@ -5,7 +5,6 @@ import { refreshToken } from "./auth";
 // config axios
 const instance = axios.create({
 	baseURL: import.meta.env.VITE_BASE_URL,
-	// baseURL: "https://music-app-api-three.vercel.app/api/track",
 	headers: { "Content-Type": "application/json" },
 });
 /* :::::::::::::: Xử  trước khi gửi request xuống server :::::::::::::: */

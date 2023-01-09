@@ -54,12 +54,16 @@ const loginPage = {
 		if (loginForm) {
 			loginForm.addEventListener("submit", async (event) => {
 				event.preventDefault();
+				const { email, password } = event.target.elements;
 
 				if (!rules.areRequired(email, password)) return;
 				if (!rules.isEmail(email)) return;
 
 				try {
-					const res = await login(data);
+					const res = await login({
+						email: email.value,
+						password: password.value,
+					});
 					if (res) {
 						const { accessToken, id, username } = res;
 						storage.set("accessToken", accessToken);
