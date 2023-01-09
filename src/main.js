@@ -40,7 +40,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 			done();
 		},
 	});
-
+	router.on("/login", () => {
+		$("#app").innerHTML = LoginPage();
+	});
 	router.on({
 		"/": async () => {
 			await render(mainLayout);
@@ -49,9 +51,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 		"/home": () => {
 			renderPageContent(HomePage);
 		},
-		"/login": () => {
-			render(LoginPage);
-		},
+		// "/login": () => {
+		// 	render(LoginPage);
+		// },
 		"/register": () => {
 			render(RegisterPage);
 		},
