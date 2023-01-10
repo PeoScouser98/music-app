@@ -22,7 +22,7 @@ export default function LoginPage() {
 			<div class="hero-content flex-col xl:flex-row-reverse">
 				<div class="text-center lg:text-left">
 				
-				<h1 class="py-6 text-5xl font-bold">Million of songs are free on Bass Station</h1>
+				<h1 class="py-6 text-5xl font-bold sm:text-2xl">Million of songs are free on Bass Station</h1>
 				<a href="/" class="btn btn-primary">Get Started!</a>
 				</div>
 				<div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
