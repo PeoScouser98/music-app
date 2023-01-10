@@ -10,9 +10,12 @@ import router from "../../main";
 import playlistPage from "../../pages/playlist";
 import { getTracksCollection, updateTracksCollection } from "../../api/collection";
 import { debounce } from "../../utils/common";
+import store from "@/redux/store";
 
 const audioController = {
 	async render(track) {
+		const currentTrack = store.getState().audio;
+		store.subscribe(() => {});
 		const audio = $("#audio-player");
 		audio.src = track?.trackSrc;
 		audio.dataset.current = track?._id;
@@ -72,7 +75,7 @@ const audioController = {
 								</button>
 								<!-- toggle play -->
 								<label class="swap swap-rotate group">
-									<input type="checkbox" id="toggle-play" ${audio.paused ? "" : "checked"}/>
+									<input type="checkbox" id="toggle-play" checked="${window.isPlaying}"/>
 									<div class="swap-off bg-transparent text-4xl text-base-content group-hover:text-accent" id="play-btn">
 										<i class="bi bi-play-circle"></i>
 									</div>

@@ -10,7 +10,7 @@ const instance = axios.create({
 /* :::::::::::::: Xử  trước khi gửi request xuống server :::::::::::::: */
 instance.interceptors.request.use(
 	(config) => {
-		console.log(import.meta.env.VITE_BASE_URL);
+		// console.log(import.meta.env.VITE_BASE_URL);
 		/* Bỏ qua check access token với các routes nay */
 		const skippingCheckTokenRoutes = ["/login", "/register", "/refresh-token", "/forgot-password", "/reset-password"];
 		if (skippingCheckTokenRoutes.indexOf(config.url) >= 0) return config;

@@ -1,10 +1,12 @@
 import { $ } from "@/utils/common";
 import accountDropdown from "../dropdown/account-dropdown";
 import router from "@/main";
+import store from "@/redux/store";
+import { fetchUserThunkAction } from "@/redux/slices/user.slice";
+import AccountDropdown from "../dropdown/account-dropdown";
 
-const header = {
-	async render() {
-		return /* html */ ` 
+export default function Header() {
+	return /* html */ ` 
 			<nav class="navbar justify-between items-center p-5 bg-base-200" id="header">
 				<label for="sidebar-toggle" class="drawer-button sm:inline-flex md:inline-flex hidden btn btn-circle btn-ghost text-sm hover:bg-transparent text-base-content/50 hover:text-base-content">
 					<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="current" viewBox="0 0 24 24" stroke="currentColor">
@@ -36,26 +38,24 @@ const header = {
 							<i class="bi bi-sun swap-on"></i>
 						</label>
 					</div>
-					
-					${await accountDropdown.render()}
+					<div id="account-dropdown">
+						${AccountDropdown()}
+					</div>
 				</div>
 			</nav>`;
-	},
-	async handleEvents() {
-		accountDropdown.handleEvents();
 
-		const swapTheme = $("#swap-theme");
-		if (swapTheme)
-			swapTheme.onchange = () => {
-				const document = $("html");
-				document.dataset.theme = swapTheme.checked ? "light" : "dark";
-			};
+	// accountDropdown.handleEvents();
 
-		const keywordInput = $("#keyword");
-		if (keywordInput)
-			keywordInput.onfocus = () => {
-				router.navigate("/search");
-			};
-	},
-};
-export default header;
+	// const swapTheme = $("#swap-theme");
+	// if (swapTheme)
+	// 	swapTheme.onchange = () => {
+	// 		const document = $("html");
+	// 		document.dataset.theme = swapTheme.checked ? "light" : "dark";
+	// 	};
+
+	// const keywordInput = $("#keyword");
+	// if (keywordInput)
+	// 	keywordInput.onfocus = () => {
+	// 		router.navigate("/search");
+	// 	};
+}

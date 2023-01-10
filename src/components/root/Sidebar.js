@@ -7,21 +7,9 @@ import storage from "../../utils/localstorage";
 import createPlaylistModal from "../modals/create-playlist-modal";
 import toast from "../notification/toast";
 
-const asideMenu = {
-	async render(userPlaylists) {
-		const auth = await getUser();
-		const userPlaylistsHTML =
-			userPlaylists !== undefined && Array.isArray(userPlaylists)
-				? userPlaylists
-						.map(
-							(list) => /* html */ `
-									<li class="menu-item" id="${list._id}">
-										<a href="/#/playlist/${list._id}">${list.title}</a>
-									</li>`,
-						)
-						.join("")
-				: "";
-		return /* html */ `
+export default function Sidebar() {
+	const auth = storage.get("auth");
+	return /* html */ `
 			<aside class="drawer-side">
 				<label for="sidebar-toggle" class="drawer-overlay"></label>
 				<div class="menu invisible-scroll p-5 overflow-y-auto w-80 bg-base-300 text-lg relative">
@@ -57,7 +45,9 @@ const asideMenu = {
 							
 						</li>
 						<li class="menu-item">
-							<label for="${auth != undefined ? "upload-modal-toggle" : "require-login-modal"}" class="inline-grid grid-cols-[10%,90%]" id="upload-btn">
+							<label for="${
+								auth != undefined ? "upload-modal-toggle" : "require-login-modal"
+							}" class="inline-grid grid-cols-[10%,90%]" id="upload-btn">
 								<span class="material-symbols-outlined">cloud_upload</span> Upload
 							</label>
 						</li>
@@ -71,33 +61,9 @@ const asideMenu = {
 						<div class="divider before:bg-zinc-500 after:bg-zinc-500"></div>
 					</ul>
 					<ul class="menu overflow-y-auto h-full scroll text-base xxl:text-lg" id="user-playlist">
-						${userPlaylistsHTML}
+					
 					</ul>
 				</div>
 			</aside>
 					`;
-	},
-	handleEvents() {
-		const sidebar = $(".drawer-side");
-		if (sidebar) {
-			const linkItems = sidebar.querySelectorAll("a");
-			const sidebarToggle = $("#sidebar-toggle");
-			linkItems.forEach(
-				(item) =>
-					(item.onclick = () => {
-						sidebarToggle.checked = false;
-					}),
-			);
-		}
-
-		const menuItems = $$(".menu-item");
-		menuItems.forEach(
-			(item) =>
-				(item.onclick = () => {
-					menuItems.forEach((item) => item.classList.remove("menu-item-active"));
-					item.classList.add("menu-item-active");
-				}),
-		);
-	},
-};
-export default asideMenu;
+}

@@ -3,14 +3,14 @@ import { $ } from "./common";
 
 export const render = async (layout) => {
 	const app = $("#app");
-	if (app) app.innerHTML = await layout.render();
+	if (app) app.innerHTML = layout();
 	if (layout.handleEvents) layout.handleEvents();
 };
 
 export const renderPageContent = async (page, id) => {
 	const main = $("#main");
-	if (main) main.innerHTML = await page.render(id);
-	if (page.handleEvents) page.handleEvents();
+	if (main) main.innerHTML = await page(id);
+
 	const pageContent = $("#page-content");
 	if (pageContent) pageContent.scrollIntoView();
 };

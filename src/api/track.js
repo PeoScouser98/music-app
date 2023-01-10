@@ -2,11 +2,11 @@ import instance from "./axios.config";
 import storage from "../utils/localstorage";
 import audioController from "../components/root/audio-controller";
 import toast from "../components/notification/toast";
+import store from "@/redux/store";
 
 export const getAll = async (limit) => {
 	try {
-		const { tracks, album } = await instance.get(`/track?limit=${limit}`);
-		return { tracks, album };
+		return await instance.get(`/track?limit=${limit}`);
 	} catch (error) {
 		console.log(error.message);
 	}
@@ -56,17 +56,23 @@ export const addToNextUp = (track) => {
 };
 
 export const getNowPlayingTrack = async (nextUp) => {
-	console.log(nextUp);
 	if (nextUp && Array.isArray(nextUp) && nextUp.length == 0) {
 		const [track] = await instance.get("/track");
 		storage.set("nowPlaying", track);
 		storage.set("nextUp", [track]);
-		console.log(track);
+		store.dispatch({
+			type: "SET_NOW_PLAYING_TRACK",
+			payload: track,
+		});
+
 		audioController.loadCurrentTrack(track);
 	} else {
 		const currentTrack = storage.get("nowPlaying");
+		store.dispatch({
+			type: "SET_NOW_PLAYING_TRACK",
+			payload: currentTrack,
+		});
 
-		console.log(currentTrack);
 		audioController.loadCurrentTrack(currentTrack);
 	}
 };

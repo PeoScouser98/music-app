@@ -1,59 +1,53 @@
-import "./index.css";
 import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+import "./index.css";
 
 import Navigo from "navigo";
 import { render, renderPageContent } from "./utils/handle-page";
-import { getNowPlayingTrack } from "./api/track";
-import { $ } from "./utils/common";
 
 // import layout
-import mainLayout from "./layouts/main";
 
 // import pages
-import HomePage from "./pages/home";
-import LoginPage from "./pages/login";
-import RegisterPage from "./pages/register";
-import ForgotPasswordPage from "./pages/forgot-password";
-import ResetPasswordPage from "./pages/reset-password";
-import ArtistPage from "./pages/artist";
-import NextUpPage from "./pages/nextup";
-import AlbumPage from "./pages/album";
-import PlaylistPage from "./pages/playlist";
-import storage from "./utils/localstorage";
-import LibraryPage from "./pages/library";
+import Layout from "./layouts/main";
 import NotFoundPage from "./pages/404";
+import AlbumPage from "./pages/album";
+import ArtistPage from "./pages/artist";
+import ForgotPasswordPage from "./pages/forgot-password";
+import HomePage from "./pages/home";
+import LibraryPage from "./pages/library";
+import LoginPage from "./pages/login";
+import NextUpPage from "./pages/nextup";
+import PlaylistPage from "./pages/playlist";
+import RegisterPage from "./pages/register";
+import ResetPasswordPage from "./pages/reset-password";
 import SearchPage from "./pages/search";
-import loadingPage from "./pages/loading";
+import { fetchAllTrack } from "./redux/slices/track.slice";
+import { fetchUserThunkAction } from "./redux/slices/user.slice";
 import store from "./redux/store";
 
 const router = new Navigo("/", { hash: true });
 
-console.log(store);
 document.addEventListener("DOMContentLoaded", async () => {
-	await render(mainLayout);
-
 	router.hooks({
 		before: (done) => {
-			const nextUp = storage.get("nextUp");
-			if (!nextUp) storage.set("nextUp", []);
-			renderPageContent(loadingPage);
+			render(Layout);
+			// renderPageContent(loadingPage);
+			store.dispatch(fetchAllTrack(5));
+			store.dispatch(fetchUserThunkAction());
 			done();
 		},
 	});
-	router.on("/login", () => {
-		$("#app").innerHTML = LoginPage();
-	});
+	router.on();
 	router.on({
-		"/": async () => {
-			await render(mainLayout);
+		"/": () => {
+			render(Layout);
 			renderPageContent(HomePage);
 		},
 		"/home": () => {
 			renderPageContent(HomePage);
 		},
-		// "/login": () => {
-		// 	render(LoginPage);
-		// },
+		"/login": () => {
+			render(LoginPage);
+		},
 		"/register": () => {
 			render(RegisterPage);
 		},

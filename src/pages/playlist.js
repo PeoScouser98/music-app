@@ -1,7 +1,7 @@
 import * as Playlist from "../api/playlist";
 import audioController from "../components/root/audio-controller";
 import trackCard from "@/components/cards/track-card";
-import header from "@/components/root/header";
+import header from "@/components/root/Header";
 import storage from "@/utils/localstorage";
 import { getTracksCollection } from "@/api/collection";
 import { $ } from "@/utils/common";
@@ -16,6 +16,7 @@ const playlistPage = {
 		if (Array.isArray(tracks))
 			tracks.forEach((track) => (track.isLiked = tracks.find((item) => item._id === track._id) !== undefined));
 		return /* html */ `
+		
         <div class="flex flex-col gap-10 sm:gap-5 overflow-y-auto h-full scroll px-8 py-8 sm:px-2" id="page-content">
 				<!-- banner -->
 				<section class="w-full flex relative shadow-2xl rounded-2xl">

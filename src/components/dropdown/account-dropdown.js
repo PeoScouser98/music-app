@@ -2,19 +2,17 @@ import { getUser, logout } from "../../api/auth";
 import storage from "../../utils/localstorage";
 import { $ } from "../../utils/common";
 import toast from "../notification/toast";
+import store from "@/redux/store";
+import { fetchUserThunkAction } from "@/redux/slices/user.slice";
 
-const accountDropdown = {
-	async render() {
-		const user = await getUser();
-		// const auth = storage.get("auth")
-		return !user
-			? /* html */ `
-				<div class="tooltip tooltip-bottom" data-tip="Login">
-					<a href="/#/login" class="btn btn-circle btn-primary">
-						<span class="material-symbols-outlined">power_settings_new</span>
-					</a>
-				</div>`
-			: /* html */ `
+export default function AccountDropdown() {
+	const user = store.getState().user;
+
+	store.subscribe(() => {
+		$("#account-dropdown").innerHTML = AccountDropdown();
+	});
+
+	return /* html */ `
 				<div class="dropdown dropdown-end">
 					<div class="flex items-center gap-3 p-0 text-primary-content normal-case my-2" tabindex="0">
 						<img src="https://placeimg.com/192/192/people" class="max-w-[3rem] h-full rounded-full" />
@@ -23,7 +21,7 @@ const accountDropdown = {
 						<li>
 							<a href="/#/account">
 								<span class="material-symbols-outlined">person</span>
-								<div class="flex justify-between items-center gap-5">Account <span class="badge badge-primary badge-lg bg-primary border-primary text-base-content text-xs w-fit truncate">${user.username}</span></div>
+								<div class="flex justify-between items-center gap-5">Account <span class="badge badge-primary badge-lg bg-primary border-primary text-base-content text-xs w-fit truncate">${user?.username}</span></div>
 							</a>
 						</li>
 						<li id="logout__btn">
@@ -31,13 +29,4 @@ const accountDropdown = {
 						</li>
 					</ul>
 				</div>`;
-	},
-	handleEvents() {
-		if ($("#logout__btn"))
-			$("#logout__btn").onclick = () => {
-				logout();
-				toast("success", "You've logged out!");
-			};
-	},
-};
-export default accountDropdown;
+}

@@ -16,6 +16,7 @@
 	},
 	"dependencies": {
 		"@material-icons/font": "^1.0.36",
+		"@reduxjs/toolkit": "^1.9.1",
 		"@rollup/plugin-alias": "^4.0.2",
 		"axios": "^0.27.2",
 		"bootstrap-icons": "^1.9.1",
@@ -24,6 +25,7 @@
 		"navigo": "^8.11.1",
 		"redux": "^4.2.0",
 		"redux-devtools-extension": "^2.13.9",
+		"redux-thunk": "^2.4.2",
 		"swiper": "^8.4.2",
 		"tailwindcss-container-query": "^1.1.0"
 	}

@@ -1,16 +1,23 @@
 // import trackCardDropdown from "../dropdown/track-card-dropdown";
-
+import formatNumber from "@/utils/format-number";
 import storage from "@/utils/localstorage";
+import timer from "@/utils/timer";
+import store from "@/redux/store";
+import CurrentTrack from "../audio-controller/currentTrack";
+import { $ } from "@/utils/common";
 
 export default function SongCard(track, index) {
-	track.thumbnail = track.album?.image ?? track.artists[0]?.avatar ?? "../../assets/img/default-thumbnail.png";
-	const nowPlaying = storage.get("nowPlaying");
-	const iPlayingTrack = nowPlaying._id === track._id;
+	// track.thumbnail = track.album?.image ?? track.artists[0]?.avatar ?? "../../assets/img/default-thumbnail.png";
+
+	window.handleChangeTrack = function (elem) {
+		console.log(elem.dataset.track);
+	};
+
 	return /* html */ ` 
 		<div class="track-card group" data-track="${track._id}">
 			<div class="track-card-action">
 				<div class="track-card-index group-hover:hidden">${index + 1}</div>
-				<div class="sound-wave group-hover:hidden ">
+				<div class="sound-wave group-hover:hidden hidden">
 					<div></div>
 					<div></div>
 					<div></div>
@@ -19,7 +26,7 @@ export default function SongCard(track, index) {
 				</div>
 				<label
 					class="swap swap-rotate swap-btn hidden btn btn-ghost btn-circle text-xl sm:text-base sm:btn-sm sm:w-10 sm:h-10 sm:rounded-full hover:btn-accent sm:btn-ghost group-hover:inline-grid group-hover:items-center">
-					<input type="checkbox" class="toggle-play" />
+					<input type="checkbox" class="toggle-play" id="${track._id}" onchange="handleChangeTrack(this)"/>
 						<div class="swap-on play-track-btn" data-track="${track._id}">
 							<i class="bi bi-pause-fill"></i>
 						</div>
@@ -32,7 +39,7 @@ export default function SongCard(track, index) {
 		
 			<div class="track-card-body">
 				<div>
-					<img src="${track.thumbnail}" class="sm:max-w-[40px] " />
+					<img src="../../assets/img/default-thumbnail.png" class="sm:max-w-[40px] " />
 					<div>
 						<h4 class="track-title sm:max-w-[180px] w-full">${track.title}</h4>
 						${track.artists
@@ -48,8 +55,17 @@ export default function SongCard(track, index) {
 				<div class="flex items-center gap-2"><i class="bi bi-clock"></i>${timer(track.duration)}</div>
 			</div>
 		
-			<!-- <div class="track-card-dropdown">
-				${trackCardDropdown.render(track)}
-			</div> -->
+	
 		</div>`;
 }
+
+class SongCardElement extends HTMLElement {
+	constructor() {
+		super();
+	}
+	connectedCallback() {
+		this.textContent = SongCard();
+	}
+}
+
+customElements.define("song-card", SongCardElement);
