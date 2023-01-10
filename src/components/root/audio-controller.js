@@ -25,7 +25,7 @@ const audioController = {
 			if (tracks.find((item) => item?._id == track?._id)) isExistedInList = true;
 		}
 		return /* html */ `
-				<div class="w-full text-base-content flex flex-wrap xl:flex-nowrap xxl:flex-nowrap justify-between items-center xl:items-start xxl:items-start flex-grow gap-5  p-5 bg-base-200"
+				<div class="w-full text-base-content flex flex-wrap xl:flex-nowrap xxl:flex-nowrap justify-between items-center xl:items-start xxl:items-start flex-grow gap-5  p-5 bg-base-300"
 				style="box-shadow: 0 25px 50px 12px rgba(0,0,0,0.5)">
 					<!-- track infor -->
 					<div class="flex justify-start items-center gap-3 order-1 basis-1/4 sm:basis-1/2 md:basis-1/2">

@@ -10,8 +10,9 @@ import toast from "../notification/toast";
 const asideMenu = {
 	async render(userPlaylists) {
 		const auth = await getUser();
+
 		const userPlaylistsHTML =
-			userPlaylists !== undefined && Array.isArray(userPlaylists)
+			userPlaylists !== undefined && Array.isArray(userPlaylists) && auth
 				? userPlaylists
 						.map(
 							(list) => /* html */ `
@@ -24,7 +25,7 @@ const asideMenu = {
 		return /* html */ `
 			<aside class="drawer-side">
 				<label for="sidebar-toggle" class="drawer-overlay"></label>
-				<div class="menu invisible-scroll p-5 overflow-y-auto w-80 bg-base-300 text-lg relative">
+				<div class="menu invisible-scroll p-5 overflow-y-auto w-80 bg-neutral text-lg relative text-white">
 					<!-- Sidebar content here -->
 					<a href="/#/" class="text-left inline-flex items-center">
 						<img src="./img/logo.png" alt="" class="max-w-[16rem] h-28 object-center object-cover -translate-x-4" />
@@ -57,7 +58,9 @@ const asideMenu = {
 							
 						</li>
 						<li class="menu-item">
-							<label for="${auth != undefined ? "upload-modal-toggle" : "require-login-modal"}" class="inline-grid grid-cols-[10%,90%]" id="upload-btn">
+							<label for="${
+								auth != undefined ? "upload-modal-toggle" : "require-login-modal"
+							}" class="inline-grid grid-cols-[10%,90%]" id="upload-btn">
 								<span class="material-symbols-outlined">cloud_upload</span> Upload
 							</label>
 						</li>

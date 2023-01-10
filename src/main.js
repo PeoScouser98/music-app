@@ -37,8 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 			const nextUp = storage.get("nextUp");
 			if (!nextUp) storage.set("nextUp", []);
 			renderPageContent(loadingPage);
-			const auth = storage.get("auth");
-			if (!auth) router.navigate("/login");
+
 			done();
 		},
 	});

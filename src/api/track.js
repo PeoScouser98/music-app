@@ -3,10 +3,10 @@ import storage from "../utils/localstorage";
 import audioController from "../components/root/audio-controller";
 import toast from "../components/notification/toast";
 
-export const getAll = async (limit) => {
+export const getAll = async ({ limit = 5, skip }) => {
 	try {
-		const { tracks, album } = await instance.get(`/track?limit=${limit}`);
-		return { tracks, album };
+		const tracks = await instance.get(`/track?limit=${limit}&skip=${skip || 5}`);
+		return tracks;
 	} catch (error) {
 		console.log(error.message);
 	}

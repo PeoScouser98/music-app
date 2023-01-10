@@ -11,7 +11,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { getAlbumsCollection, getArtistsCollection, getTracksCollection } from "../api/collection";
-
+import { getAll } from "@/api/track";
+import { $ } from "@/utils/common";
 const homePage = {
 	async render() {
 		const auth = storage.get("auth");
@@ -47,14 +48,20 @@ const homePage = {
 		});
 		return /* html */ `
 			<div class="flex flex-col gap-10 py-8 px-8 sm:px-3 overflow-y-auto h-full invisible-scroll" id="page-content">
-				<section class="relative">
+				<section class="relative flex flex-col">
 					<div class="relative z-10">
 						<h1 class="text-2xl sm:text-xl font-semibold mb-5 text-base-content">Most Popular</h1>
-						<div class="flex flex-col sm:gap-3">${
-							Array.isArray(tracks) ? tracks.map((item, index) => trackCard.render(item, index)).join("") : ""
-						}</div>
-						<a class="text-right font-medium text-base-content block mt-5 hover:link">See more</a>
+						<div class="flex flex-col sm:gap-3" id="top-tracks-list">
+						${Array.isArray(tracks) ? tracks.map((track, index) => trackCard.render(track, index)).join("") : ""}
+						</div>
+
+						
 					</div>
+					<label class="swap text-right font-medium text-base-content self-end mt-5 hover:link">
+						<input type="checkbox" id="see-more-tracks-btn" />
+						<div class="swap-on">See less</div>
+						<div class="swap-off">See more</div>
+					</label>
 				</section>
 				<section>
 					<h1 class="text-2xl  sm:text-xl font-semibold mb-5 text-base-content">Artists you also like</h1>
@@ -84,6 +91,24 @@ const homePage = {
 		`;
 	},
 	handleEvents() {
+		const seeMoreBtn = $("#see-more-tracks-btn");
+		if (seeMoreBtn)
+			seeMoreBtn.addEventListener("change", async (e) => {
+				const limit = e.target.checked ? 10 : 5;
+				const tracks = await getAll({
+					skip: 0,
+					limit: limit,
+				});
+				console.log(tracks);
+				if (Array.isArray(tracks))
+					$("#top-tracks-list").innerHTML = tracks
+						.map((item, index) => {
+							return trackCard.render(item, index);
+						})
+						.join("");
+				trackCard.handleEvents();
+			});
+
 		const swiper = new Swiper(".artist-slider", {
 			modules: [Navigation, Pagination],
 			loop: true,

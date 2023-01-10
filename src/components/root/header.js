@@ -47,8 +47,8 @@ const header = {
 		const swapTheme = $("#swap-theme");
 		if (swapTheme)
 			swapTheme.onchange = () => {
-				const document = $("html");
-				document.dataset.theme = swapTheme.checked ? "light" : "dark";
+				const mainScreen = $("#main-screen");
+				mainScreen.dataset.theme = swapTheme.checked ? "light" : "dark";
 			};
 
 		const keywordInput = $("#keyword");
